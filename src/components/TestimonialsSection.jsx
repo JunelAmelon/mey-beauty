@@ -1,4 +1,5 @@
 import useRevealOnScroll from '../hooks/useRevealOnScroll.js';
+import { useEffect, useMemo, useState } from 'react';
 
 const TESTIMONIALS = [
   {
@@ -47,6 +48,32 @@ function Stars({ value }) {
 
 export default function TestimonialsSection() {
   useRevealOnScroll('.reveal');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const items = useMemo(() => TESTIMONIALS, []);
+
+  const goPrev = () => {
+    setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
+  };
+
+  const goNext = () => {
+    setActiveIndex((prev) => (prev + 1) % items.length);
+  };
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 760px)');
+    const sync = () => setIsMobile(mq.matches);
+
+    sync();
+    if (mq.addEventListener) {
+      mq.addEventListener('change', sync);
+      return () => mq.removeEventListener('change', sync);
+    }
+
+    mq.addListener(sync);
+    return () => mq.removeListener(sync);
+  }, []);
 
   return (
     <section className="testimonials-section reveal">
@@ -72,31 +99,36 @@ export default function TestimonialsSection() {
             La confiance de nos clientes est notre plus belle récompense. Découvrez leurs expériences avec Mey Beauty Paris.
           </p>
           <div className="testimonials-nav">
-            <button aria-label="Précédent">
+            <button aria-label="Précédent" onClick={goPrev}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="15,18 9,12 15,6" /></svg>
             </button>
-            <button aria-label="Suivant">
+            <button aria-label="Suivant" onClick={goNext}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="9,18 15,12 9,6" /></svg>
             </button>
           </div>
         </div>
 
         <div className="testimonials-cards">
-          {TESTIMONIALS.map((t) => (
-            <div key={t.id} className="testi-card">
-              <p className="testi-text">{t.text}</p>
-              <div className="testi-author">
-                <div className="testi-avatar">
-                  <img src={t.avatar} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <div className="testi-info">
-                  <div className="testi-name">{t.name}</div>
-                  <div className="testi-role">{t.role}</div>
-                  <Stars value={t.stars} />
+          <div
+            className="testimonials-track"
+            style={isMobile ? { transform: `translateX(-${activeIndex * 100}%)` } : undefined}
+          >
+            {items.map((t) => (
+              <div key={t.id} className="testi-card">
+                <p className="testi-text">{t.text}</p>
+                <div className="testi-author">
+                  <div className="testi-avatar">
+                    <img src={t.avatar} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div className="testi-info">
+                    <div className="testi-name">{t.name}</div>
+                    <div className="testi-role">{t.role}</div>
+                    <Stars value={t.stars} />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

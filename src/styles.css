@@ -226,6 +226,10 @@ a { text-decoration: none; color: inherit; }
   position: relative;
 }
 
+.hero-mobile-image {
+  display: none;
+}
+
 .hero-petal-1, .hero-petal-2 {
   position: absolute;
   pointer-events: none;
@@ -481,6 +485,10 @@ a { text-decoration: none; color: inherit; }
   font-size: 14px; color: #C0A898;
   align-self: flex-start;
   line-height: 1;
+}
+
+.popup-close:hover {
+  color: var(--brun);
 }
 
 /* ============================================================
@@ -954,11 +962,16 @@ a { text-decoration: none; color: inherit; }
 .testimonials-nav button:hover { background: var(--brun); color: var(--blanc); border-color: var(--brun); }
 
 .testimonials-cards {
+  overflow: hidden;
+}
+
+.testimonials-track {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  overflow: hidden;
+  transition: transform 420ms ease;
 }
+
 .testi-card {
   background: var(--blanc);
   border: 1px solid var(--gris-border);
@@ -1398,43 +1411,63 @@ a { text-decoration: none; color: inherit; }
 }
 
 @media (max-width: 760px) {
-  .announce-bar { padding: 9px 16px; gap: 10px; }
-  .announce-bar .promo { display: none; }
+  .announce-bar {
+    padding: 10px 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .announce-bar .phone,
+  .announce-bar .login {
+    width: 100%;
+    justify-content: center;
+  }
+  .announce-bar .promo {
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.35;
+  }
   .nav { padding: 0 16px; }
   .nav-menu { display: none; }
   .mobile-menu-btn { display: inline-flex; }
   .hero { grid-template-columns: 1fr; height: auto; }
-  .hero-right { display: none; }
-  .hero-left { height: 280px; }
-  .hero-center { height: auto; padding: 34px 16px 42px; }
-  .hero-col { height: auto; }
+  .hero-left,
+  .hero-right {
+    display: none;
+  }
+  .hero-center {
+    height: auto;
+    padding: 18px 16px 42px;
+  }
+  .hero-mobile-image {
+    display: block;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto 18px;
+    border-radius: 2px;
+  }
+  .hero-mobile-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(30,16,8,0.16) 100%);
+    pointer-events: none;
+  }
   .hero-title { font-size: 34px; }
   .hero-subtitle { max-width: 320px; }
-  .hero-petal-1 { top: 14%; right: 10%; opacity: 0.55; }
-  .hero-petal-2 { bottom: 16%; left: 10%; opacity: 0.45; }
+  .hero-petal-1,
+  .hero-petal-2 {
+    display: none;
+  }
 
   .hero-dots {
     margin-top: 26px;
     gap: 10px;
     padding: 0 12px;
-  }
-  .hero-dots::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: min(180px, 70vw);
-    height: 2px;
-    transform: translate(-50%, -50%);
-    background: repeating-linear-gradient(
-      to right,
-      rgba(82,58,40,0.45) 0,
-      rgba(82,58,40,0.45) 6px,
-      rgba(82,58,40,0) 6px,
-      rgba(82,58,40,0) 14px
-    );
-    opacity: 0.55;
-    pointer-events: none;
   }
   .hero-dots span {
     background: rgba(82,58,40,0.35);
@@ -1463,4 +1496,59 @@ a { text-decoration: none; color: inherit; }
   .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
 
   .nav-logo img { max-height: 48px; }
+
+  .product-card {
+    text-align: center;
+  }
+  .stars {
+    justify-content: center;
+  }
+  .product-name,
+  .product-price,
+  .product-cat {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%;
+  }
+
+  .products-section .product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .purchase-popup {
+    left: 14px;
+    right: auto;
+    bottom: 18px;
+    min-width: min(260px, calc(100vw - 28px));
+  }
+
+  .testimonials-section {
+    padding: 64px 16px;
+  }
+  .testimonials-inner {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .testimonials-header {
+    padding-top: 0;
+    text-align: left;
+  }
+  .testimonials-cards {
+    overflow: hidden;
+  }
+  .testimonials-track {
+    display: flex;
+    gap: 0;
+  }
+  .testi-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  .testimonials-nav {
+    justify-content: center;
+  }
 }
