@@ -130,6 +130,22 @@ export default function TestimonialsSection() {
             ))}
           </div>
         </div>
+
+        <div className="testimonials-dots" aria-label="Navigation témoignages">
+          {items.map((t, idx) => (
+            <span
+              key={t.id}
+              className={idx === activeIndex ? 'active' : ''}
+              onClick={() => setActiveIndex(idx)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Aller au témoignage ${idx + 1}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setActiveIndex(idx);
+              }}
+            ></span>
+          ))}
+        </div>
       </div>
     </section>
   );

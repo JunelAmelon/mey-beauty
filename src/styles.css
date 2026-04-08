@@ -1019,6 +1019,22 @@ a { text-decoration: none; color: inherit; }
 }
 .testi-stars .star { font-size: 12px; }
 
+.testimonials-dots {
+  display: none;
+}
+
+.testimonials-dots span {
+  width: 32px;
+  height: 2px;
+  background: var(--gris-border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.testimonials-dots span.active {
+  background: var(--brun);
+}
+
 /* ============================================================
    ⑨ BLOG + INSTAGRAM + MARQUES
 ============================================================ */
@@ -1412,21 +1428,7 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 760px) {
   .announce-bar {
-    padding: 10px 12px;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-  .announce-bar .phone,
-  .announce-bar .login {
-    width: 100%;
-    justify-content: center;
-  }
-  .announce-bar .promo {
-    width: 100%;
-    font-size: 12px;
-    line-height: 1.35;
+    display: none;
   }
   .nav { padding: 0 16px; }
   .nav-menu { display: none; }
@@ -1481,7 +1483,21 @@ a { text-decoration: none; color: inherit; }
     border-color: rgba(82,58,40,0.9);
   }
   .products-section, .lookbook-section, .testimonials-section, .blog-section { padding: 64px 16px; }
-  .products-grid { grid-template-columns: 1fr; gap: 16px; }
+  .products-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .products-grid::-webkit-scrollbar {
+    height: 6px;
+  }
+  .products-grid::-webkit-scrollbar-thumb {
+    background: rgba(82,58,40,0.25);
+    border-radius: 999px;
+  }
   .blog-grid { grid-template-columns: 1fr; gap: 20px; }
   .instagram-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-top { grid-template-columns: 1fr; gap: 28px; }
@@ -1499,6 +1515,8 @@ a { text-decoration: none; color: inherit; }
 
   .product-card {
     text-align: center;
+    scroll-snap-align: center;
+    min-width: min(78vw, 340px);
   }
   .stars {
     justify-content: center;
@@ -1516,6 +1534,14 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .lookbook-nav {
+    display: none;
+  }
+
+  .lookbook-dots {
+    justify-content: center;
   }
 
   .purchase-popup {
@@ -1550,5 +1576,12 @@ a { text-decoration: none; color: inherit; }
   }
   .testimonials-nav {
     justify-content: center;
+  }
+
+  .testimonials-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 18px;
   }
 }
