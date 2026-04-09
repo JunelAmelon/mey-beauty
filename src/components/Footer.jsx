@@ -4,7 +4,9 @@ export default function Footer() {
       <div className="footer-top">
         <div className="footer-brand">
           <div style={{ marginBottom: 16 }}>
-            <img src="/mey-beauty.png" alt="Mey Beauty" style={{ width: 150, height: 'auto' }} />
+            <a href="#home" aria-label="Aller à l’accueil">
+              <img src="/mey-beauty.png" alt="Mey Beauty" style={{ width: 150, height: 'auto' }} />
+            </a>
           </div>
           <p className="footer-tagline">
             Des cosmétiques d'exception conçus à Paris pour sublimer chaque carnation avec élégance et raffinement.

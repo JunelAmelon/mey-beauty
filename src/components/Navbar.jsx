@@ -28,7 +28,9 @@ export default function Navbar() {
 
       <aside className={`mobile-drawer${mobileOpen ? ' open' : ''}`} aria-hidden={!mobileOpen}>
         <div className="mobile-drawer-top">
-          <img src="/mey-beauty.png" alt="Mey Beauty" style={{ maxHeight: 56, width: 'auto' }} />
+          <a href="#home" onClick={() => setMobileOpen(false)} aria-label="Aller à l’accueil">
+            <img src="/mey-beauty.png" alt="Mey Beauty" style={{ maxHeight: 56, width: 'auto' }} />
+          </a>
           <button className="mobile-drawer-close" onClick={() => setMobileOpen(false)} aria-label="Fermer le menu">
             ✕
           </button>
@@ -44,9 +46,9 @@ export default function Navbar() {
       </aside>
 
       <nav className={`nav${scrolled ? ' scrolled' : ''}`} id="mainNav">
-        <div className="nav-logo" aria-label="Mey Beauty Paris">
+        <a className="nav-logo" href="#home" aria-label="Aller à l’accueil">
           <img src="/mey-beauty.png" alt="Mey Beauty" />
-        </div>
+        </a>
         <ul className="nav-menu">
           <li><a href="#home">Accueil</a></li>
           <li><a href="#about">À Propos</a></li>
