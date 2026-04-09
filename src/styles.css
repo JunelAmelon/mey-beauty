@@ -1936,7 +1936,10 @@ a { text-decoration: none; color: inherit; }
 }
 
 .about-footer {
-  padding: 36px 16px 76px;
+  margin-top: 12px;
+  padding: 54px 16px 76px;
+  border-top: 1px solid var(--gris-border);
+  background: var(--nude-lighter);
   text-align: center;
 }
 
@@ -1950,6 +1953,45 @@ a { text-decoration: none; color: inherit; }
 
 .about-back:hover {
   color: var(--brun-dark);
+}
+
+.legal-page {
+  background: var(--blanc);
+}
+
+.legal-content {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 64px 60px 86px;
+}
+
+.legal-block {
+  border: 1px solid var(--gris-border);
+  background: var(--blanc);
+  border-radius: 4px;
+  padding: 24px 22px;
+  margin-bottom: 16px;
+}
+
+.legal-block h2 {
+  font-family: var(--font-titre);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--brun);
+  margin-bottom: 10px;
+}
+
+.legal-block p {
+  font-family: var(--font-corps);
+  font-size: 13px;
+  color: #8A6E5A;
+  line-height: 1.85;
+}
+
+.legal-actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
 }
 
 /* ============================================================

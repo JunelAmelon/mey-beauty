@@ -78,8 +78,8 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-copy">© 2024 Mey Beauty Paris. Tous droits réservés.</div>
         <div className="footer-legal">
-          <a href="#">Mentions Légales</a>
-          <a href="#">Politique de Confidentialité</a>
+          <a href="#legal">Mentions Légales</a>
+          <a href="#privacy">Politique de Confidentialité</a>
         </div>
       </div>
     </footer>

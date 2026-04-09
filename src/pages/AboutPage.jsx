@@ -217,17 +217,17 @@ export default function AboutPage() {
 
         <div className="about-team-grid">
           <div className="about-team-card">
-            <img src="/mey-beauty%20(4).jpeg" alt="Mélanie" />
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Mélanie" />
             <div className="about-team-name">Mélanie</div>
             <div className="about-team-role">Soins & accompagnement</div>
           </div>
           <div className="about-team-card">
-            <img src="/mey-beauty%20(5).jpeg" alt="Brianna" />
+            <img src="https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=900&q=80" alt="Brianna" />
             <div className="about-team-name">Brianna</div>
             <div className="about-team-role">Beauté du regard</div>
           </div>
           <div className="about-team-card">
-            <img src="/mey-beauty%20(6).jpeg" alt="Yoana" />
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80" alt="Yoana" />
             <div className="about-team-name">Yoana</div>
             <div className="about-team-role">Onglerie & finitions</div>
           </div>
