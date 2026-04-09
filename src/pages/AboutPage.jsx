@@ -53,7 +53,7 @@ export default function AboutPage() {
 
         <div className="about-text">
           <div className="about-label">À propos de nous</div>
-          <h2>Un institut à Viry‑Châtillon dédié à votre éclat naturel</h2>
+          <h2>Votre institut à Viry‑Châtillon dédié à votre éclat naturel</h2>
           <p>
             Situé au 6 Place des Martyrs de Châteaubriand (91170), Mey Beauty est un institut pensé comme
             un cocon de détente et de bien‑être. Notre mission : proposer des soins personnalisés,
