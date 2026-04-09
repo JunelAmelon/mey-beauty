@@ -44,14 +44,15 @@ export default function Footer() {
         </div>
 
         <div className="footer-col">
-          <h4>Support</h4>
+          <h4>Horaires</h4>
           <ul>
-            <li><a href="#">Soin de la Peau</a></li>
-            <li><a href="#">Beauté</a></li>
-            <li><a href="#">Bien-Être</a></li>
-            <li><a href="#">Mon Compte</a></li>
-            <li><a href="#">Investisseurs</a></li>
-            <li><a href="#">Bons Cadeaux</a></li>
+            <li><a href="#">Lundi · 10h – 18h</a></li>
+            <li><a href="#">Mardi · 10h – 18h</a></li>
+            <li><a href="#">Mercredi · 10h – 18h</a></li>
+            <li><a href="#">Jeudi · 10h – 18h</a></li>
+            <li><a href="#">Vendredi · 10h – 21h</a></li>
+            <li><a href="#">Samedi · 09h – 17h</a></li>
+            <li><a href="#">Dimanche · Fermé</a></li>
           </ul>
         </div>
 

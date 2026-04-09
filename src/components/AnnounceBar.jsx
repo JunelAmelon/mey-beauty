@@ -7,7 +7,7 @@ export default function AnnounceBar() {
         </svg>
         Commandes : +33 1 23 456 789
       </div>
-      <div className="promo">Recevez 10% de réduction & livraison offerte dès 50€</div>
+      <div className="promo">Institut Mey Beauty · Réservation en ligne 24h/24</div>
       <div className="login">
         Se connecter
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

@@ -28,18 +28,18 @@ export default function Navbar() {
 
       <aside className={`mobile-drawer${mobileOpen ? ' open' : ''}`} aria-hidden={!mobileOpen}>
         <div className="mobile-drawer-top">
-          <img src="/mey-beauty.png" alt="Mey Beauty" style={{ maxHeight: 34, width: 'auto' }} />
+          <img src="/mey-beauty.png" alt="Mey Beauty" style={{ maxHeight: 56, width: 'auto' }} />
           <button className="mobile-drawer-close" onClick={() => setMobileOpen(false)} aria-label="Fermer le menu">
             ✕
           </button>
         </div>
         <ul className="mobile-drawer-links">
-          <li><a href="#" onClick={() => setMobileOpen(false)}>Accueil</a></li>
-          <li><a href="#" onClick={() => setMobileOpen(false)}>À Propos</a></li>
-          <li><a href="#" onClick={() => setMobileOpen(false)}>Boutique</a></li>
-          <li><a href="#" onClick={() => setMobileOpen(false)}>Blog</a></li>
-          <li><a href="#" onClick={() => setMobileOpen(false)}>Pages</a></li>
-          <li><a href="#" onClick={() => setMobileOpen(false)}>Contact</a></li>
+          <li><a href="#home" onClick={() => setMobileOpen(false)}>Accueil</a></li>
+          <li><a href="#about" onClick={() => setMobileOpen(false)}>À Propos</a></li>
+          <li><a href="#home" onClick={() => setMobileOpen(false)}>Boutique</a></li>
+          <li><a href="#home" onClick={() => setMobileOpen(false)}>Blog</a></li>
+          <li><a href="#home" onClick={() => setMobileOpen(false)}>Pages</a></li>
+          <li><a href="#contact" onClick={() => setMobileOpen(false)}>Contact</a></li>
         </ul>
       </aside>
 
@@ -48,12 +48,12 @@ export default function Navbar() {
           <img src="/mey-beauty.png" alt="Mey Beauty" />
         </div>
         <ul className="nav-menu">
-          <li><a href="#">Accueil</a></li>
-          <li><a href="#">À Propos</a></li>
-          <li><a href="#">Boutique</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Pages</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#home">Accueil</a></li>
+          <li><a href="#about">À Propos</a></li>
+          <li><a href="#home">Boutique</a></li>
+          <li><a href="#home">Blog</a></li>
+          <li><a href="#home">Pages</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
         <div className="nav-actions">
           <button aria-label="Recherche">

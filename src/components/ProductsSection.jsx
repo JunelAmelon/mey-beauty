@@ -81,26 +81,7 @@ const PRODUCTS = [
     image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-06.1.webp',
     primaryAction: 'Ajouter au Panier',
   },
-  {
-    id: 9,
-    badge: { text: 'Nouveau', className: 'product-badge badge-new' },
-    stars: 5,
-    cat: 'Sérum',
-    name: 'Sérum Hydratation Intense',
-    price: '28,00€ – 42,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-08.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 10,
-    badge: null,
-    stars: 4,
-    cat: 'Maquillage',
-    name: 'Rouge à Lèvres Velours',
-    price: '16,00€ – 24,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-09.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
+ 
 ];
 
 function Stars({ value }) {
