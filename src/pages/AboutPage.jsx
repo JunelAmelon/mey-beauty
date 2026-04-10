@@ -222,7 +222,7 @@ export default function AboutPage() {
               <div className="about-team-caption">
                 <div className="about-team-name">Mélanie</div>
                 <div className="about-team-role">Soins & accompagnement</div>
-                <div className="about-team-desc">Rituels visage, conseils personnalisés et suivi pour une peau lumineuse.</div>
+                
               </div>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function AboutPage() {
               <div className="about-team-caption">
                 <div className="about-team-name">Brianna</div>
                 <div className="about-team-role">Beauté du regard</div>
-                <div className="about-team-desc">Rehaussement, brow lift et finitions précises pour un regard structuré.</div>
+                
               </div>
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function AboutPage() {
               <div className="about-team-caption">
                 <div className="about-team-name">Yoana</div>
                 <div className="about-team-role">Onglerie & finitions</div>
-                <div className="about-team-desc">Manucure, semi‑permanent et nail care pour une finition nette et durable.</div>
+               
               </div>
             </div>
           </div>
