@@ -326,20 +326,59 @@ a { text-decoration: none; color: inherit; }
   display: none;
 }
 
-.hero-petal-1, .hero-petal-2 {
-  position: absolute;
-  pointer-events: none;
+.hero-flower-top {
+  display: block;
+  width: 154px;
+  height: auto;
+  margin: 0 auto 18px;
+  filter: drop-shadow(0 10px 22px rgba(82,58,40,0.10));
+  animation: heroFloatTop 4.6s ease-in-out infinite;
 }
-.hero-petal-1 { top: 18%; right: 18%; opacity: 0.7; animation: float1 4s ease-in-out infinite; }
-.hero-petal-2 { bottom: 22%; left: 16%; opacity: 0.5; animation: float2 5s ease-in-out infinite 1s; }
 
-@keyframes float1 {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(8deg); }
+.hero-flower-bottom-left,
+.hero-flower-bottom-right {
+  position: absolute;
+  top: 50%;
+  pointer-events: none;
+  height: auto;
+  filter: drop-shadow(0 12px 24px rgba(82,58,40,0.10));
+  transform: translateY(-50%);
 }
-@keyframes float2 {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(-6deg); }
+
+.hero-flower-bottom-left {
+  left: 0;
+  width: 59px;
+  opacity: 0.95;
+  animation: heroFloatBL 5.2s ease-in-out infinite;
+}
+
+.hero-flower-bottom-right {
+  right: 0;
+  width: 89px;
+  opacity: 0.95;
+  animation: heroFloatBR 5.6s ease-in-out infinite 0.5s;
+}
+
+.hero-dots-area {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 32px;
+}
+
+@keyframes heroFloatTop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes heroFloatBL {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes heroFloatBR {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
 }
 
 .hero-kicker {
@@ -396,7 +435,6 @@ a { text-decoration: none; color: inherit; }
 .hero-dots {
   display: flex;
   gap: 8px;
-  margin-top: 32px;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -2135,6 +2173,23 @@ a { text-decoration: none; color: inherit; }
     width: 22px;
     height: 22px;
     border-color: rgba(82,58,40,0.9);
+  }
+
+  .hero-flower-top {
+    display: none;
+  }
+
+  .hero-dots-area {
+    max-width: 360px;
+    margin-top: 26px;
+  }
+
+  .hero-flower-bottom-left {
+    width: 46px;
+  }
+
+  .hero-flower-bottom-right {
+    width: 74px;
   }
   .products-section, .lookbook-section, .testimonials-section, .blog-section { padding: 64px 16px; }
   .products-grid {

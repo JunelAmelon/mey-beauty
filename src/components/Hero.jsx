@@ -128,19 +128,15 @@ export default function Hero() {
 
       <div className="hero-col hero-center">
 
+        <img
+          className="hero-flower-top"
+          src="/Amiy-Slider-Flower-Top-Img.webp"
+          alt=""
+          aria-hidden="true"
+        />
+
         <div className="hero-mobile-image">
           <img className="hero-photo" src={slide.leftImage} alt="Photo mise en avant" />
-        </div>
-
-        <div className="hero-petal-1">
-          <svg className="petal-svg" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M30 5 Q55 20 52 50 Q48 70 30 75 Q12 70 8 50 Q5 20 30 5Z" fill="#F4B8B8" opacity="0.7" />
-          </svg>
-        </div>
-        <div className="hero-petal-2">
-          <svg viewBox="0 0 45 60" width="45" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 3 Q42 14 39 37 Q36 52 22 56 Q8 52 5 37 Q2 14 22 3Z" fill="#ECA8A8" opacity="0.6" transform="rotate(-25 22 30)" />
-          </svg>
         </div>
 
         <div className="hero-slide active" key={slide.id}>
@@ -150,20 +146,34 @@ export default function Hero() {
         </div>
 
         <a href="#about" className="btn-cta">Découvrir</a>
-        <div className="hero-dots">
-          {SLIDES.map((s, idx) => (
-            <span
-              key={s.id}
-              className={idx === activeSlide ? 'active' : ''}
-              onClick={() => goTo(idx)}
-              role="button"
-              tabIndex={0}
-              aria-label={`Aller au slide ${idx + 1}`}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') goTo(idx);
-              }}
-            ></span>
-          ))}
+        <div className="hero-dots-area" aria-label="Navigation hero">
+          <img
+            className="hero-flower-bottom-left"
+            src="/Amiy-Slider-Flower-Bottom-Left-Img.webp"
+            alt=""
+            aria-hidden="true"
+          />
+          <div className="hero-dots">
+            {SLIDES.map((s, idx) => (
+              <span
+                key={s.id}
+                className={idx === activeSlide ? 'active' : ''}
+                onClick={() => goTo(idx)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Aller au slide ${idx + 1}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') goTo(idx);
+                }}
+              ></span>
+            ))}
+          </div>
+          <img
+            className="hero-flower-bottom-right"
+            src="/Amiy-Slider-Flower-Bottom-Right-Img.webp"
+            alt=""
+            aria-hidden="true"
+          />
         </div>
       </div>
 
