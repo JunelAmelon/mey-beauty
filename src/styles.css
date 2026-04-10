@@ -1916,13 +1916,31 @@ a { text-decoration: none; color: inherit; }
   text-align: center;
 }
 
+.about-team-photo {
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
 .about-team-card img {
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
-  border-radius: 2px;
-  margin-bottom: 16px;
+  border-radius: 0;
+  margin-bottom: 0;
   display: block;
+}
+
+.about-team-caption {
+  padding-top: 16px;
+}
+
+.about-team-desc {
+  font-family: var(--font-corps);
+  font-size: 13px;
+  color: #8A6E5A;
+  line-height: 1.6;
+  margin-top: 10px;
 }
 
 .about-team-name {
@@ -2197,10 +2215,19 @@ a { text-decoration: none; color: inherit; }
   .about-services-grid { grid-template-columns: 1fr; }
   .about-team { padding: 64px 16px 56px; }
   .about-team-grid { grid-template-columns: 1fr; }
-  .about-team-card { text-align: left; }
-  .about-team-card img { display: block; margin-bottom: 14px; }
-  .about-team-name { font-size: 18px; }
-  .about-team-role { font-size: 13px; line-height: 1.45; }
+  .about-team-card { text-align: center; }
+  .about-team-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 18px 14px 16px;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.62) 60%, rgba(0,0,0,0.70) 100%);
+    text-align: center;
+  }
+  .about-team-name { font-size: 18px; color: #fff; margin-bottom: 4px; }
+  .about-team-role { font-size: 12px; line-height: 1.45; color: rgba(255,255,255,0.82); }
+  .about-team-desc { font-size: 12px; line-height: 1.45; color: rgba(255,255,255,0.88); margin-top: 8px; }
   .about-video { padding: 80px 16px 64px; }
   .about-video h2 { font-size: 34px; }
   .about-stats { grid-template-columns: repeat(2, 1fr); }
