@@ -29,7 +29,7 @@ export default function Navbar() {
       <aside className={`mobile-drawer${mobileOpen ? ' open' : ''}`} aria-hidden={!mobileOpen}>
         <div className="mobile-drawer-top">
           <a href="#home" onClick={() => setMobileOpen(false)} aria-label="Aller à l’accueil">
-            <img src="/mey-beauty.png" alt="Mey Beauty" style={{ maxHeight: 56, width: 'auto' }} />
+            <img src="/mey-beauty.png" alt="Mey Beauty" style={{ maxHeight: 47, width: 'auto' }} />
           </a>
           <button className="mobile-drawer-close" onClick={() => setMobileOpen(false)} aria-label="Fermer le menu">
             ✕

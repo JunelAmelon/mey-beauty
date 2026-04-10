@@ -36,7 +36,7 @@ const SLIDES = [
     kicker: 'Soin & Beauté',
     title: (
       <>
-        Routine <em>Soins</em>
+        Routine <em>Beauté</em>
         <br />
         &amp; Maquillage
       </>

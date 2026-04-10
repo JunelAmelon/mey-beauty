@@ -205,7 +205,7 @@ a { text-decoration: none; color: inherit; }
 }
 .nav-logo img {
   display: block;
-  max-height: 88px;
+  max-height: 74px;
   width: auto;
 }
 .nav-logo span {
@@ -2204,8 +2204,8 @@ a { text-decoration: none; color: inherit; }
   .footer { padding: 48px 16px 0; }
   .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
 
-  .nav-logo { transform: scale(2); transform-origin: left center; }
-  .nav-logo img { max-height: 48px; }
+  .nav-logo { transform: scale(1.67); transform-origin: left center; }
+  .nav-logo img { max-height: 40px; }
 
   .about-hero h1 { font-size: 44px; }
   .about-intro { margin: 64px auto; padding: 0 16px; }
