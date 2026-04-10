@@ -52,6 +52,7 @@ export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const slide = SLIDES[activeSlide];
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 760px)');
@@ -68,12 +69,23 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) return;
+    if (document.visibilityState === 'hidden') return;
     const id = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % SLIDES.length);
     }, 5500);
     return () => clearInterval(id);
-  }, [isMobile]);
+  }, [isMobile, tick]);
+
+  useEffect(() => {
+    const onVisibility = () => setTick((v) => v + 1);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  const goTo = (idx) => {
+    setActiveSlide(idx);
+    setTick((v) => v + 1);
+  };
 
   return (
     <section className="hero">
@@ -112,12 +124,12 @@ export default function Hero() {
             <span
               key={s.id}
               className={idx === activeSlide ? 'active' : ''}
-              onClick={() => setActiveSlide(idx)}
+              onClick={() => goTo(idx)}
               role="button"
               tabIndex={0}
               aria-label={`Aller au slide ${idx + 1}`}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') setActiveSlide(idx);
+                if (e.key === 'Enter' || e.key === ' ') goTo(idx);
               }}
             ></span>
           ))}

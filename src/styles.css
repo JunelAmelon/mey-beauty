@@ -1920,8 +1920,9 @@ a { text-decoration: none; color: inherit; }
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
-  border-radius: 3px;
+  border-radius: 2px;
   margin-bottom: 16px;
+  display: block;
 }
 
 .about-team-name {
@@ -2132,6 +2133,7 @@ a { text-decoration: none; color: inherit; }
     gap: 10px;
     justify-content: center;
     margin-top: 26px;
+    margin-bottom: 18px;
     padding: 0 12px;
   }
 
@@ -2159,6 +2161,10 @@ a { text-decoration: none; color: inherit; }
     border-radius: 50%;
     border: 1px solid rgba(82,58,40,0.9);
     transform: translate(-50%, -50%);
+  }
+
+  .view-all-wrap {
+    margin-top: 0;
   }
   .products-grid::-webkit-scrollbar {
     height: 6px;
@@ -2191,6 +2197,10 @@ a { text-decoration: none; color: inherit; }
   .about-services-grid { grid-template-columns: 1fr; }
   .about-team { padding: 64px 16px 56px; }
   .about-team-grid { grid-template-columns: 1fr; }
+  .about-team-card { text-align: left; }
+  .about-team-card img { display: block; margin-bottom: 14px; }
+  .about-team-name { font-size: 18px; }
+  .about-team-role { font-size: 13px; line-height: 1.45; }
   .about-video { padding: 80px 16px 64px; }
   .about-video h2 { font-size: 34px; }
   .about-stats { grid-template-columns: repeat(2, 1fr); }
