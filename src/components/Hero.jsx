@@ -1,50 +1,81 @@
 import { useEffect, useState } from 'react';
 
 const SLIDES = [
-  {
-    id: 0,
-    kicker: 'Meilleur Prix',
-    title: (
-      <>
-        Cosmétiques <em>Mey Beauty</em>
-        <br />
-        Paris
-      </>
-    ),
-    subtitle:
-      "Des formules d'exception pour sublimer votre beauté naturelle, créées avec passion à Paris.",
-    leftImage: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Slider-1-Img-1.webp',
-    rightImage: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Slider-1-Img-2.webp',
-  },
+ 
   {
     id: 1,
-    kicker: 'Studio Ongles',
+    kicker: 'Soins minceur',
     title: (
       <>
-        Onglerie <em>Premium</em>
+        Soins <em>minceur</em>
         <br />
-        Paris
+        et bien‑être
       </>
     ),
     subtitle:
-      "Manucure, gel et nail art : un résultat élégant, précis et longue tenue.",
-    leftImage: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/slider-2-a.webp',
-    rightImage: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/slider-2-b-1.webp',
+      'soins minceur et bien etre : drainage, cures et accompagnement pour votre silhouette.',
+    leftImage: 'soin minceur (1).jpg',
+    rightImage: 'soin minceur (2).jpg',
   },
   {
     id: 2,
-    kicker: 'Soin & Beauté',
+    kicker: 'Soin spa',
     title: (
       <>
-        Routine <em>Beauté</em>
+        Soin <em>spa</em>
         <br />
-        &amp; Maquillage
+        &amp; détente
       </>
     ),
     subtitle:
-      "Des produits sélectionnés pour une peau éclatante, hydratée et lumineuse au quotidien.",
-    leftImage: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/slider-3-a-2.webp',
-    rightImage: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/slider-3-b.webp',
+      'soin spa : une parenthèse de calme, des gestes experts et une vraie relaxation.',
+    leftImage: 'soin spa.JPG',
+    rightImage: 'soin spa (2).jpg',
+  },
+  {
+    id: 3,
+    kicker: 'Massages corps',
+    title: (
+      <>
+        Massages <em>corps</em>
+        <br />
+        bien‑être
+      </>
+    ),
+    subtitle:
+      'massages corps : relâcher les tensions, apaiser l’esprit et retrouver l’énergie.',
+    leftImage: 'massage-corps.JPG',
+    rightImage: 'massage-corps (2).jpg',
+  },
+   {
+    id: 0,
+    kicker: 'Mey Beauty',
+    title: (
+      <>
+        Soin <em>visage</em>
+        <br />
+        sur‑mesure
+      </>
+    ),
+    subtitle:
+      'soin visage : nettoyage, éclat, hydratation — des résultats visibles et durables.',
+    leftImage: 'soin visage (2).jpg',
+    rightImage: 'soin visage (1).jpg',
+  },
+  {
+    id: 4,
+    kicker: 'Beauté du regard',
+    title: (
+      <>
+        Beauté du <em>regard</em>
+        <br />
+        &amp; finitions
+      </>
+    ),
+    subtitle:
+      'beaute du regard : rehaussement, brow lift, teinture — un résultat élégant et précis.',
+    leftImage: 'beauté regard (2).jpg',
+    rightImage: 'beauté regard (3).jpg',
   },
 ];
 

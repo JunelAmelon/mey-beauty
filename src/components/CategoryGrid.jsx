@@ -5,7 +5,7 @@ const CATS = [
     kicker: 'Éclat',
     title: 'Soin du visage\nSur‑mesure',
     cta: '— Réserver maintenant —',
-    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1600&q=80',
+    image: 'soin visage (2).jpg',
   },
   {
     id: 'cat-2',
@@ -13,7 +13,7 @@ const CATS = [
     kicker: 'Silhouette',
     title: 'Minceur &\nRemodelage',
     cta: '— Réserver maintenant —',
-    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1600&q=80',
+    image: 'soin-minceur.PNG',
   },
   {
     id: 'cat-3',
