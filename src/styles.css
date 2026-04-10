@@ -776,6 +776,10 @@ a { text-decoration: none; color: inherit; }
   gap: 24px;
   margin-bottom: 52px;
 }
+
+.products-dots {
+  display: none;
+}
 .product-card {
   cursor: pointer;
 }
@@ -2060,9 +2064,10 @@ a { text-decoration: none; color: inherit; }
   .announce-bar {
     display: none;
   }
-  .nav { padding: 0 16px; }
+  .nav { padding: 0 16px; overflow: visible; }
   .nav-menu { display: none; }
   .mobile-menu-btn { display: inline-flex; }
+  .nav-actions { gap: 14px; }
   .hero { grid-template-columns: 1fr; height: auto; }
   .hero-left,
   .hero-right {
@@ -2121,6 +2126,40 @@ a { text-decoration: none; color: inherit; }
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
+
+  .products-dots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 26px;
+    padding: 0 12px;
+  }
+
+  .products-dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(82,58,40,0.35);
+    cursor: pointer;
+    transition: background var(--transition);
+    position: relative;
+  }
+
+  .products-dots span.active {
+    background: var(--brun);
+  }
+
+  .products-dots span.active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(82,58,40,0.9);
+    transform: translate(-50%, -50%);
+  }
   .products-grid::-webkit-scrollbar {
     height: 6px;
   }
@@ -2141,6 +2180,7 @@ a { text-decoration: none; color: inherit; }
   .footer { padding: 48px 16px 0; }
   .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
 
+  .nav-logo { transform: scale(2); transform-origin: left center; }
   .nav-logo img { max-height: 48px; }
 
   .about-hero h1 { font-size: 44px; }

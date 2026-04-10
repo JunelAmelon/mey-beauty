@@ -12,7 +12,14 @@ export default function App() {
   const [hash, setHash] = useState(() => window.location.hash || '#home');
 
   useEffect(() => {
-    const onHashChange = () => setHash(window.location.hash || '#home');
+    const onHashChange = () => {
+      const next = window.location.hash || '#home';
+      setHash(next);
+
+      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      }
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);

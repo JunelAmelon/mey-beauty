@@ -50,9 +50,30 @@ const SLIDES = [
 
 export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const slide = SLIDES[activeSlide];
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 760px)');
+    const sync = () => setIsMobile(mq.matches);
+
+    sync();
+    if (mq.addEventListener) {
+      mq.addEventListener('change', sync);
+      return () => mq.removeEventListener('change', sync);
+    }
+
+    mq.addListener(sync);
+    return () => mq.removeListener(sync);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const id = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % SLIDES.length);
+    }, 5500);
+    return () => clearInterval(id);
+  }, [isMobile]);
 
   return (
     <section className="hero">

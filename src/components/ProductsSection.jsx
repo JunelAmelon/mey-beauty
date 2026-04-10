@@ -1,4 +1,5 @@
 import useRevealOnScroll from '../hooks/useRevealOnScroll.js';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const PRODUCTS = [
   {
@@ -102,6 +103,39 @@ function Stars({ value }) {
 
 export default function ProductsSection() {
   useRevealOnScroll('.reveal');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const cardRefs = useRef([]);
+  const items = useMemo(() => PRODUCTS, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 760px)');
+    const sync = () => setIsMobile(mq.matches);
+
+    sync();
+    if (mq.addEventListener) {
+      mq.addEventListener('change', sync);
+      return () => mq.removeEventListener('change', sync);
+    }
+
+    mq.addListener(sync);
+    return () => mq.removeListener(sync);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const id = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % items.length);
+    }, 4500);
+    return () => clearInterval(id);
+  }, [isMobile, items.length]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const el = cardRefs.current[activeIndex];
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, [activeIndex, isMobile]);
 
   return (
     <section className="products-section reveal">
@@ -111,8 +145,14 @@ export default function ProductsSection() {
       </div>
 
       <div className="products-grid">
-        {PRODUCTS.map((p) => (
-          <div key={p.id} className="product-card">
+        {items.map((p, idx) => (
+          <div
+            key={p.id}
+            className="product-card"
+            ref={(node) => {
+              cardRefs.current[idx] = node;
+            }}
+          >
             <div className="product-img-wrap">
               <img className="product-photo" src={p.image} alt={p.name} />
               {p.badge ? <div className={p.badge.className}>{p.badge.text}</div> : null}
@@ -129,6 +169,24 @@ export default function ProductsSection() {
           </div>
         ))}
       </div>
+
+      {isMobile ? (
+        <div className="products-dots" aria-label="Navigation produits">
+          {items.map((p, idx) => (
+            <span
+              key={p.id}
+              className={idx === activeIndex ? 'active' : ''}
+              onClick={() => setActiveIndex(idx)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Aller au produit ${idx + 1}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setActiveIndex(idx);
+              }}
+            ></span>
+          ))}
+        </div>
+      ) : null}
 
       <div className="view-all-wrap">
         <a href="#" className="btn-cta">— Voir Tout —</a>
