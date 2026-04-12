@@ -699,6 +699,23 @@ a { text-decoration: none; color: inherit; }
   background-size: cover;
   background-position: center;
 }
+
+.cat-bg-video,
+.cat-bg-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cat-bg-video {
+  z-index: 0;
+}
+
+.cat-bg-video + .cat-bg-photo {
+  display: none;
+}
 .cat-item:hover .cat-bg { transform: scale(1.06); }
 
 .cat-overlay {

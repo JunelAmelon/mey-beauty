@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 const CATS = [
   {
     id: 'cat-1',
@@ -5,6 +7,7 @@ const CATS = [
     kicker: 'Éclat',
     title: 'Soin du visage\nSur‑mesure',
     cta: '— Réserver maintenant —',
+    video: 'https://www.pexels.com/fr-fr/download/video/9335813/',
     image: 'soin visage (2).jpg',
   },
   {
@@ -13,6 +16,7 @@ const CATS = [
     kicker: 'Silhouette',
     title: 'Minceur &\nRemodelage',
     cta: '— Réserver maintenant —',
+    video: 'https://www.pexels.com/fr-fr/download/video/32828416/',
     image: 'soin-minceur.PNG',
   },
   {
@@ -21,6 +25,7 @@ const CATS = [
     kicker: 'Regard',
     title: 'Beauté du\nRegard',
     cta: '— Réserver maintenant —',
+    video: 'https://www.pexels.com/fr-fr/download/video/8502623/',
     image: 'mey-beauty (6).jpeg',
   },
   {
@@ -29,6 +34,7 @@ const CATS = [
     kicker: 'Mains',
     title: 'Onglerie\nPremium',
     cta: '— Réserver maintenant —',
+    video: '',
     image: 'meybeauty.jpg',
   },
 ];
@@ -46,12 +52,75 @@ function TitleWithBreaks({ text }) {
   );
 }
 
+function CatBgVideo({ src, poster, label }) {
+  const videoRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  const allowVideo = useMemo(() => {
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const saveData =
+      typeof navigator !== 'undefined' &&
+      navigator.connection &&
+      navigator.connection.saveData;
+
+    return !reduceMotion && !saveData;
+  }, []);
+
+  useEffect(() => {
+    const node = videoRef.current;
+    if (!node) return;
+    if (!allowVideo) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          const p = node.play();
+          if (p && typeof p.catch === 'function') p.catch(() => {});
+        } else {
+          node.pause();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    io.observe(node);
+    return () => io.disconnect();
+  }, [allowVideo]);
+
+  if (!allowVideo) return null;
+
+  return (
+    <video
+      className="cat-bg-video"
+      ref={videoRef}
+      src={shouldLoad ? src : undefined}
+      poster={poster}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-label={label}
+    />
+  );
+}
+
 export default function CategoryGrid() {
   return (
     <section className="cat-grid">
       {CATS.map((cat) => (
         <div key={cat.id} className={cat.className}>
           <div className="cat-bg">
+            {cat.video ? (
+              <CatBgVideo src={cat.video} poster={cat.image} label={cat.kicker} />
+            ) : null}
             <img className="cat-bg-photo" src={cat.image} alt={cat.kicker} />
           </div>
           <div className="cat-overlay"></div>

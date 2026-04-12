@@ -1,14 +1,16 @@
 const HASHTAGS = [
-  '#CrèmeVisage',
-  '#Rouge à Lèvres',
-  '#Gel Douche',
-  '#Shampooing',
-  '#Contour des Yeux',
-  '#Toucher de Peau',
-  '#Sérum Éclat',
-  '#Fond de Teint',
-  '#Soin Corps',
-  '#Mascara',
+  '#SoinVisage',
+  '#SoinsMinceurEtBienEtre',
+  '#SoinSpa',
+  '#MassagesCorps',
+  '#BeauteDuRegard',
+  '#Onglerie',
+  '#BrowLift',
+  '#RehaussementDeCils',
+  '#DrainageLymphatique',
+  '#Manucure',
+  '#SemiPermanent',
+  '#InstitutDeBeaute',
 ];
 
 export default function HashtagBanner() {

@@ -172,8 +172,8 @@ export default function ProductsSection() {
   return (
     <section ref={sectionRef} className="products-section reveal">
       <div className="section-header">
-        <span className="section-kicker">Les mieux notés</span>
-        <h2 className="section-title">Boutique par Notes</h2>
+        <span className="section-kicker">Boutique</span>
+        <h2 className="section-title">Nos produits de beauté</h2>
       </div>
 
       <div ref={gridRef} className="products-grid">
