@@ -35,6 +35,7 @@ const CATS = [
     title: 'Onglerie\nPremium',
     cta: '— Réserver maintenant —',
     video: '',
+    imageOnly: true,
     image: 'meybeauty.jpg',
   },
 ];
@@ -119,6 +120,10 @@ export default function CategoryGrid() {
           <div className="cat-bg">
             {cat.video ? (
               <CatBgVideo src={cat.video} label={cat.kicker} />
+            ) : null}
+
+            {cat.imageOnly ? (
+              <img className="cat-bg-photo" src={cat.image} alt={cat.kicker} />
             ) : null}
           </div>
           <div className="cat-overlay"></div>
