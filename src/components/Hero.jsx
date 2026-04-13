@@ -29,7 +29,7 @@ const SLIDES = [
     ),
     subtitle:
       'soin spa : une parenthèse de calme, des gestes experts et une vraie relaxation.',
-    leftImage: 'soin spa.JPG',
+    leftImage: 'soin visage.PNG',
     rightImage: 'soin spa (1).JPG',
   },
   {
@@ -59,7 +59,7 @@ const SLIDES = [
     ),
     subtitle:
       'soin visage : nettoyage, éclat, hydratation — des résultats visibles et durables.',
-    leftImage: 'soin visage.PNG',
+    leftImage: 'soin visage (2).jpg',
     rightImage: 'soin visage (1).jpg',
   },
   {
