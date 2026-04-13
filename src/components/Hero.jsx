@@ -29,8 +29,8 @@ const SLIDES = [
     ),
     subtitle:
       'soin spa : une parenthèse de calme, des gestes experts et une vraie relaxation.',
-    leftImage: 'soin spa (1).JPG',
-    rightImage: 'soin spa (2).jpg',
+    leftImage: 'soin spa.JPG',
+    rightImage: 'soin spa (1).JPG',
   },
   {
     id: 3,
