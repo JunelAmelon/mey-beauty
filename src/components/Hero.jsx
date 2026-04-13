@@ -29,7 +29,7 @@ const SLIDES = [
     ),
     subtitle:
       'soin spa : une parenthèse de calme, des gestes experts et une vraie relaxation.',
-    leftImage: 'soin spa.JPG',
+    leftImage: 'soin spa (1).JPG',
     rightImage: 'soin spa (2).jpg',
   },
   {
@@ -74,7 +74,7 @@ const SLIDES = [
     ),
     subtitle:
       'beaute du regard : rehaussement, brow lift, teinture — un résultat élégant et précis.',
-    leftImage: 'beauté regard (2).jpg',
+    leftImage: 'Beauty regard.jpg',
     rightImage: 'beauté regard (3).jpg',
   },
 ];

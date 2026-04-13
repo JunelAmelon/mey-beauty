@@ -52,7 +52,7 @@ function TitleWithBreaks({ text }) {
   );
 }
 
-function CatBgVideo({ src, poster, label }) {
+function CatBgVideo({ src, label }) {
   const videoRef = useRef(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
@@ -101,7 +101,6 @@ function CatBgVideo({ src, poster, label }) {
       className="cat-bg-video"
       ref={videoRef}
       src={shouldLoad ? src : undefined}
-      poster={poster}
       autoPlay
       muted
       loop
@@ -119,9 +118,8 @@ export default function CategoryGrid() {
         <div key={cat.id} className={cat.className}>
           <div className="cat-bg">
             {cat.video ? (
-              <CatBgVideo src={cat.video} poster={cat.image} label={cat.kicker} />
+              <CatBgVideo src={cat.video} label={cat.kicker} />
             ) : null}
-            <img className="cat-bg-photo" src={cat.image} alt={cat.kicker} />
           </div>
           <div className="cat-overlay"></div>
           <div className="cat-content">
