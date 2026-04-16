@@ -11,69 +11,51 @@ export default function Footer() {
           <p className="footer-tagline">
             Des cosmétiques d'exception conçus à Paris pour sublimer chaque carnation avec élégance et raffinement.
           </p>
-          <div className="footer-newsletter">
-            <input type="email" placeholder="Votre adresse e-mail" />
-            <button aria-label="S'abonner">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12,5 19,12 12,19" />
-              </svg>
-            </button>
-          </div>
         </div>
 
         <div className="footer-col">
-          <h4>Informations</h4>
+          <h4>Navigation</h4>
           <ul>
-            <li><a href="#">À Propos</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Avis</a></li>
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#about">À Propos</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Aide</h4>
+          <h4>Coordonnées</h4>
           <ul>
-            <li><a href="#">Politique de Retour</a></li>
-            <li><a href="#">Confidentialité</a></li>
-            <li><a href="#">Livraison</a></li>
-            <li><a href="#">Conditions d'Utilisation</a></li>
-            <li><a href="#">Accessibilité</a></li>
-            <li><a href="#">Mon Compte</a></li>
+            <li><a href="#contact">+33 7 49 22 68 01</a></li>
+            <li><a href="#contact">contact@meybeauty.fr</a></li>
+            <li>
+              <a href="#contact">
+                6 Place des Martyrs de Châteaubriand
+                <br />91170 Viry‑Châtillon
+              </a>
+            </li>
           </ul>
         </div>
 
         <div className="footer-col">
           <h4>Horaires</h4>
           <ul>
-            <li><a href="#">Lundi · 10h – 18h</a></li>
-            <li><a href="#">Mardi · 10h – 18h</a></li>
-            <li><a href="#">Mercredi · 10h – 18h</a></li>
-            <li><a href="#">Jeudi · 10h – 18h</a></li>
-            <li><a href="#">Vendredi · 10h – 21h</a></li>
-            <li><a href="#">Samedi · 09h – 17h</a></li>
-            <li><a href="#">Dimanche · Fermé</a></li>
+            <li>Lundi · 10h – 18h</li>
+            <li>Mardi · 10h – 18h</li>
+            <li>Mercredi · 10h – 18h</li>
+            <li>Jeudi · 10h – 18h</li>
+            <li>Vendredi · 10h – 21h</li>
+            <li>Samedi · 09h – 17h</li>
+            <li>Dimanche · Fermé</li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Paiement Sécurisé</h4>
-          <div className="payment-logos">
-            <div className="payment-row">
-              <div className="payment-icon paypal-icon">PayPal</div>
-            </div>
-            <div className="payment-row">
-              <div className="payment-icon visa-icon">VISA</div>
-            </div>
-            <div className="payment-row">
-              <div className="payment-icon mc-icon" style={{ fontSize: 8, color: '#EB001B' }}>●●</div>
-            </div>
-            <div className="payment-row">
-              <div className="payment-icon amex-icon" style={{ fontSize: 7 }}>AMEX</div>
-            </div>
-          </div>
+          <h4>Légal</h4>
+          <ul>
+            <li><a href="#legal">Mentions Légales</a></li>
+            <li><a href="#privacy">Politique de Confidentialité</a></li>
+          </ul>
         </div>
       </div>
 
