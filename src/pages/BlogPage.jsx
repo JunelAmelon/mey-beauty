@@ -58,7 +58,7 @@ export default function BlogPage() {
                 <div className="article-date">{p.date}</div>
                 <h2 className="article-title">{p.title}</h2>
                 <p className="article-excerpt">{p.excerpt}</p>
-                <a href="#contact" className="btn-read">Lire plus</a>
+                <a href="#blog-detail" className="btn-read">Lire plus</a>
               </article>
             ))}
           </div>

@@ -46,7 +46,7 @@ export default function BlogSection() {
             <div className="blog-date">{p.date}</div>
             <h3 className="blog-title">{p.title}</h3>
             <p className="blog-excerpt">{p.excerpt}</p>
-            <a href="#" className="btn-read-more">— Lire Plus —</a>
+            <a href="#blog-detail" className="btn-read-more">— Lire Plus —</a>
           </div>
         ))}
       </div>

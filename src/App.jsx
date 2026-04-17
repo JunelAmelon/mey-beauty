@@ -8,6 +8,8 @@ import LegalPage from './pages/LegalPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
+import BlogDetailPage from './pages/BlogDetailPage.jsx';
+import ShopPage from './pages/ShopPage.jsx';
 import { useEffect, useState } from 'react';
 
 export default function App() {
@@ -18,7 +20,7 @@ export default function App() {
       const next = window.location.hash || '#home';
       setHash(next);
 
-      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog') {
+      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog' || next === '#blog-detail' || next === '#shop') {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     };
@@ -32,6 +34,8 @@ export default function App() {
   if (hash === '#privacy') page = 'privacy';
   if (hash === '#contact') page = 'contact';
   if (hash === '#blog') page = 'blog';
+  if (hash === '#blog-detail') page = 'blog-detail';
+  if (hash === '#shop') page = 'shop';
 
   return (
     <>
@@ -48,6 +52,10 @@ export default function App() {
         <ContactPage />
       ) : page === 'blog' ? (
         <BlogPage />
+      ) : page === 'blog-detail' ? (
+        <BlogDetailPage />
+      ) : page === 'shop' ? (
+        <ShopPage />
       ) : (
         <HomePage />
       )}
