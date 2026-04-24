@@ -1,89 +1,7 @@
 import useRevealOnScroll from '../hooks/useRevealOnScroll.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
-
-const PRODUCTS = [
-  {
-    id: 1,
-    badge: { text: 'Solde', className: 'product-badge badge-sale' },
-    stars: 1,
-    cat: 'Lotion',
-    name: 'Fond de Teint Liquide Sans Huile',
-    price: '12,00€ – 22,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-01.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 2,
-    badge: { text: 'Solde', className: 'product-badge badge-sale' },
-    stars: 0,
-    cat: 'Crème',
-    name: 'Fond de Teint Liquide Couvrance Totale',
-    price: '18,00€ – 30,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-02.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 3,
-    badge: null,
-    stars: 3,
-    cat: 'Lotion',
-    name: 'Hydratant Ultra Peau Sèche',
-    price: '18,00€ – 32,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-10.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 4,
-    badge: { text: 'Épuisé', className: 'product-badge badge-sold' },
-    stars: 3,
-    cat: 'Crème',
-    name: 'Fixateur Maquillage Longue Tenue',
-    price: '12,00€ – 22,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-04.1.webp',
-    primaryAction: 'Me Notifier',
-  },
-  {
-    id: 5,
-    badge: null,
-    stars: 3,
-    cat: 'Sérum',
-    name: 'Sérum Cernes & Anti-Rides',
-    price: '25,00€ – 35,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-05.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 6,
-    badge: null,
-    stars: 3,
-    cat: 'Crème',
-    name: 'Lotion Hydratante Toute la Journée',
-    price: '22,00€ – 35,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-07.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 7,
-    badge: null,
-    stars: 0,
-    cat: 'Soin Cheveux',
-    name: 'Crème Cheveux Résistance Météo',
-    price: '22,00€ – 32,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-05.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
-  {
-    id: 8,
-    badge: null,
-    stars: 0,
-    cat: 'Crème',
-    name: 'Lotion Corps Sans Parfum',
-    price: '15,00€ – 25,00€',
-    image: 'https://amiy.wpenginepowered.com/wp-content/uploads/2023/10/Products-06.1.webp',
-    primaryAction: 'Ajouter au Panier',
-  },
- 
-];
+import { getPopularProducts, formatPriceEUR } from '../data/products.js';
+import { useCart } from '../context/CartContext.jsx';
 
 function Stars({ value }) {
   const total = 5;
@@ -105,11 +23,12 @@ export default function ProductsSection() {
   useRevealOnScroll('.reveal');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const { addItem } = useCart();
   const cardRefs = useRef([]);
   const gridRef = useRef(null);
   const sectionRef = useRef(null);
   const [isSectionVisible, setIsSectionVisible] = useState(true);
-  const items = useMemo(() => PRODUCTS, []);
+  const items = useMemo(() => getPopularProducts(), []);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 760px)');
@@ -184,20 +103,32 @@ export default function ProductsSection() {
             ref={(node) => {
               cardRefs.current[idx] = node;
             }}
+            onClick={(e) => {
+              if (e.defaultPrevented) return;
+              window.location.hash = `#product?id=${encodeURIComponent(p.id)}`;
+            }}
           >
             <div className="product-img-wrap">
-              <img className="product-photo" src={p.image} alt={p.name} />
-              {p.badge ? <div className={p.badge.className}>{p.badge.text}</div> : null}
+              <img className="product-photo" src={p.images?.[0]} alt={p.name} />
               <div className="product-actions">
                 <button aria-label="Favori">♡</button>
-                <button className="primary">{p.primaryAction}</button>
+                <button
+                  className="primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    addItem(p, 1);
+                  }}
+                >
+                  Ajouter au Panier
+                </button>
               </div>
             </div>
 
-            <Stars value={p.stars} />
-            <div className="product-cat">{p.cat}</div>
+            <Stars value={5} />
+            <div className="product-cat">{p.category}</div>
             <div className="product-name">{p.name}</div>
-            <div className="product-price">{p.price}</div>
+            <div className="product-price">{formatPriceEUR(p.priceCents)}</div>
           </div>
         ))}
       </div>
@@ -221,7 +152,7 @@ export default function ProductsSection() {
       ) : null}
 
       <div className="view-all-wrap">
-        <a href="#" className="btn-cta">— Voir Tout —</a>
+        <a href="#shop" className="btn-cta">— Voir Tout —</a>
       </div>
     </section>
   );

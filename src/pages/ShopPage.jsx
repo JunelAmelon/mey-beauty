@@ -1,12 +1,71 @@
+import { useEffect, useMemo, useState } from 'react';
+import { products as allProducts, formatPriceEUR } from '../data/products.js';
+import { useCart } from '../context/CartContext.jsx';
+
+function parseSearchFromHash(hash) {
+  const idx = hash.indexOf('?');
+  const query = idx >= 0 ? hash.slice(idx + 1) : '';
+  const params = new URLSearchParams(query);
+  return (params.get('search') || '').trim();
+}
+
 export default function ShopPage() {
-  const products = [
-    { id: 1, name: 'Huile de massage relaxante', price: '18,00 €', image: '/massage-corps (2).jpg' },
-    { id: 2, name: 'Crème hydratante éclat', price: '24,00 €', image: '/soin visage (2).jpg' },
-    { id: 3, name: 'Sérum glow vitaminé', price: '32,00 €', image: '/meybeauty.jpg' },
-    { id: 4, name: 'Baume douceur spa', price: '28,50 €', image: '/soin spa (2).jpg' },
-    { id: 5, name: 'Brume apaisante', price: '16,00 €', image: '/soin spa (1).JPG' },
-    { id: 6, name: 'Carte cadeau Mey Beauty', price: '50,00 €', image: '/beauté regard (3).jpg' },
-  ];
+  const { addItem } = useCart();
+  const [activeCategory, setActiveCategory] = useState('');
+  const [page, setPage] = useState(1);
+  const pageSize = 9;
+  const [search, setSearch] = useState(() => parseSearchFromHash(window.location.hash || ''));
+
+  useEffect(() => {
+    const onHash = () => setSearch(parseSearchFromHash(window.location.hash || ''));
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const categories = useMemo(() => {
+    const set = new Set(allProducts.map((p) => p.category).filter(Boolean));
+    return Array.from(set);
+  }, []);
+
+  const products = useMemo(() => {
+    let list = allProducts;
+    if (activeCategory) list = list.filter((p) => p.category === activeCategory);
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter((p) => {
+        const hay = [
+          p.name,
+          p.description,
+          p.brand,
+          p.category,
+          Array.isArray(p.tags) ? p.tags.join(' ') : '',
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        return hay.includes(q);
+      });
+    }
+    return list;
+  }, [activeCategory, search]);
+
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(products.length / pageSize)), [products.length]);
+  const pageProducts = useMemo(() => {
+    const safePage = Math.min(Math.max(1, page), totalPages);
+    const start = (safePage - 1) * pageSize;
+    return products.slice(start, start + pageSize);
+  }, [products, page, totalPages]);
+
+  const goToPage = (next) => {
+    setPage((prev) => {
+      const n = typeof next === 'function' ? next(prev) : next;
+      return Math.min(Math.max(1, n), totalPages);
+    });
+  };
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   return (
     <main className="shop-page">
@@ -24,8 +83,26 @@ export default function ShopPage() {
           <div>
             <div className="shop-sidebar-title">Recherche</div>
             <div className="shop-search">
-              <input type="text" placeholder="Rechercher un produit…" />
-              <button type="button" aria-label="Rechercher">
+              <input
+                type="text"
+                placeholder="Rechercher un produit…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const q = (search || '').trim();
+                    window.location.hash = q ? `#shop?search=${encodeURIComponent(q)}` : '#shop';
+                  }
+                }}
+              />
+              <button
+                type="button"
+                aria-label="Rechercher"
+                onClick={() => {
+                  const q = (search || '').trim();
+                  window.location.hash = q ? `#shop?search=${encodeURIComponent(q)}` : '#shop';
+                }}
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" />
                   <path d="M21 21l-4.35-4.35" />
@@ -48,14 +125,24 @@ export default function ShopPage() {
           <div>
             <div className="shop-sidebar-title">Catégories</div>
             <ul className="category-list">
-              <li>Soin visage</li>
-              <li>Soins minceur et bien‑être</li>
-              <li className="sub">Drainage</li>
-              <li className="sub">Rituels</li>
-              <li>Soin spa</li>
-              <li>Massages corps</li>
-              <li>Beauté du regard</li>
-              <li>Onglerie</li>
+              <li
+                onClick={() => setActiveCategory('')}
+                style={{ color: !activeCategory ? 'var(--brun-medium)' : undefined }}
+              >
+                Tous les produits
+              </li>
+              {categories.map((cat) => (
+                <li
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setPage(1);
+                  }}
+                  style={{ color: activeCategory === cat ? 'var(--brun-medium)' : undefined }}
+                >
+                  {cat}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -72,25 +159,69 @@ export default function ShopPage() {
 
         <div className="shop-main">
           <div className="shop-products-grid">
-            {products.map((p) => (
-              <div key={p.id} className="shop-product-card">
+            {pageProducts.map((p) => (
+              <div
+                key={p.id}
+                className="shop-product-card"
+                onClick={() => {
+                  window.location.hash = `#product?id=${encodeURIComponent(p.id)}`;
+                }}
+              >
                 <div className="shop-product-img-wrap">
-                  <img src={p.image} alt={p.name} className="shop-product-img" loading="lazy" />
+                  <img src={p.images?.[0]} alt={p.name} className="shop-product-img" loading="lazy" />
                 </div>
                 <div className="shop-product-info">
                   <div className="shop-product-name">{p.name}</div>
-                  <div className="shop-product-price">{p.price}</div>
+                  <div className="shop-product-price">{formatPriceEUR(p.priceCents)}</div>
+                  <button
+                    type="button"
+                    className="btn-read"
+                    style={{ marginTop: 12 }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      addItem(p, 1);
+                    }}
+                  >
+                    Ajouter au Panier
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
           <div className="shop-pagination" aria-label="Pagination boutique">
-            <button className="shop-page-btn inactive" type="button">1</button>
-            <button className="shop-page-btn active" type="button">2</button>
-            <button className="shop-page-btn" type="button">3</button>
-            <button className="shop-page-btn" type="button">4</button>
-            <button className="shop-page-btn arrow" type="button">→</button>
+            <button
+              className={`shop-page-btn arrow${page <= 1 ? ' inactive' : ''}`}
+              type="button"
+              onClick={() => goToPage((p) => p - 1)}
+              disabled={page <= 1}
+            >
+              ←
+            </button>
+
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const n = idx + 1;
+              return (
+                <button
+                  key={n}
+                  className={`shop-page-btn${n === page ? ' active' : ''}`}
+                  type="button"
+                  onClick={() => goToPage(n)}
+                >
+                  {n}
+                </button>
+              );
+            })}
+
+            <button
+              className={`shop-page-btn arrow${page >= totalPages ? ' inactive' : ''}`}
+              type="button"
+              onClick={() => goToPage((p) => p + 1)}
+              disabled={page >= totalPages}
+            >
+              →
+            </button>
           </div>
         </div>
       </section>

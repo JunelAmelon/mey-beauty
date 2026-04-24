@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useCart } from '../context/CartContext.jsx';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { count } = useCart();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -14,13 +18,45 @@ export default function Navbar() {
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === 'Escape') setMobileOpen(false);
+      if (e.key === 'Escape') setSearchOpen(false);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
+  const submitSearch = () => {
+    const q = (searchValue || '').trim();
+    window.location.hash = q ? `#shop?search=${encodeURIComponent(q)}` : '#shop';
+    setSearchOpen(false);
+  };
+
   return (
     <>
+      <div
+        className={`mobile-drawer-overlay${searchOpen ? ' open' : ''}`}
+        onClick={() => setSearchOpen(false)}
+      ></div>
+
+      {searchOpen ? (
+        <div className="nav-search-modal" role="dialog" aria-label="Recherche">
+          <div className="nav-search-box">
+            <input
+              type="text"
+              placeholder="Rechercher un produit…"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') submitSearch();
+              }}
+              autoFocus
+            />
+            <button type="button" onClick={submitSearch} aria-label="Rechercher">
+              Rechercher
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <div
         className={`mobile-drawer-overlay${mobileOpen ? ' open' : ''}`}
         onClick={() => setMobileOpen(false)}
@@ -58,19 +94,25 @@ export default function Navbar() {
           <li><a href="#contact">Contact</a></li>
         </ul>
         <div className="nav-actions">
-          <button aria-label="Recherche">
+          <button aria-label="Recherche" onClick={() => setSearchOpen(true)}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <circle cx="11" cy="11" r="8" />
               <path d="M21 21l-4.35-4.35" />
             </svg>
           </button>
-          <button className="cart-btn" aria-label="Panier">
+          <button
+            className="cart-btn"
+            aria-label="Panier"
+            onClick={() => {
+              window.location.hash = '#cart';
+            }}
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
               <line x1="3" y1="6" x2="21" y2="6" />
               <path d="M16 10a4 4 0 01-8 0" />
             </svg>
-            <span className="cart-count">2</span>
+            <span className="cart-count">{count}</span>
           </button>
           <button className="mobile-menu-btn" aria-label="Menu" onClick={() => setMobileOpen(true)}>
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="1.5">

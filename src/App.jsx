@@ -10,6 +10,8 @@ import ContactPage from './pages/ContactPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import BlogDetailPage from './pages/BlogDetailPage.jsx';
 import ShopPage from './pages/ShopPage.jsx';
+import ProductDetailPage from './pages/ProductDetailPage.jsx';
+import CartPage from './pages/CartPage.jsx';
 import { useEffect, useState } from 'react';
 
 export default function App() {
@@ -20,7 +22,7 @@ export default function App() {
       const next = window.location.hash || '#home';
       setHash(next);
 
-      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog' || next === '#blog-detail' || next === '#shop') {
+      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog' || next === '#blog-detail' || next.startsWith('#shop') || next === '#cart' || next.startsWith('#product')) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     };
@@ -35,7 +37,9 @@ export default function App() {
   if (hash === '#contact') page = 'contact';
   if (hash === '#blog') page = 'blog';
   if (hash === '#blog-detail') page = 'blog-detail';
-  if (hash === '#shop') page = 'shop';
+  if (hash.startsWith('#shop')) page = 'shop';
+  if (hash === '#cart') page = 'cart';
+  if (hash.startsWith('#product')) page = 'product';
 
   return (
     <>
@@ -56,6 +60,10 @@ export default function App() {
         <BlogDetailPage />
       ) : page === 'shop' ? (
         <ShopPage />
+      ) : page === 'cart' ? (
+        <CartPage />
+      ) : page === 'product' ? (
+        <ProductDetailPage />
       ) : (
         <HomePage />
       )}
