@@ -47,37 +47,33 @@ export default function App() {
 
   return (
     <>
-      {isAdmin ? (
+      {isAdmin ? null : <AnnounceBar />}
+      {isAdmin ? null : <Navbar />}
+      {isAdmin ? null : <RecentPurchaseToast />}
+      {page === 'about' ? (
+        <AboutPage />
+      ) : page === 'legal' ? (
+        <LegalPage />
+      ) : page === 'privacy' ? (
+        <PrivacyPage />
+      ) : page === 'contact' ? (
+        <ContactPage />
+      ) : page === 'blog' ? (
+        <BlogPage />
+      ) : page === 'blog-detail' ? (
+        <BlogDetailPage />
+      ) : page === 'shop' ? (
+        <ShopPage />
+      ) : page === 'cart' ? (
+        <CartPage />
+      ) : page === 'product' ? (
+        <ProductDetailPage />
+      ) : page === 'admin' ? (
         <AdminPage />
       ) : (
-        <div className="public-root">
-          <AnnounceBar />
-          <Navbar />
-          <RecentPurchaseToast />
-          {page === 'about' ? (
-            <AboutPage />
-          ) : page === 'legal' ? (
-            <LegalPage />
-          ) : page === 'privacy' ? (
-            <PrivacyPage />
-          ) : page === 'contact' ? (
-            <ContactPage />
-          ) : page === 'blog' ? (
-            <BlogPage />
-          ) : page === 'blog-detail' ? (
-            <BlogDetailPage />
-          ) : page === 'shop' ? (
-            <ShopPage />
-          ) : page === 'cart' ? (
-            <CartPage />
-          ) : page === 'product' ? (
-            <ProductDetailPage />
-          ) : (
-            <HomePage />
-          )}
-          <Footer />
-        </div>
+        <HomePage />
       )}
+      {isAdmin ? null : <Footer />}
     </>
   );
 }

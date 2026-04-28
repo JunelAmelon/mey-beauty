@@ -442,7 +442,9 @@ function StatusBadge({ value }) {
               ? 'Terminée'
               : value === 'processing'
                 ? 'En cours'
-                : String(value || '—');
+                : value === 'cancelled'
+                  ? 'Annulée'
+                  : String(value || '');
   return <span className={`admin-status-badge ${cls}`}>{label}</span>;
 }
 
@@ -673,10 +675,9 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
   useEffect(() => {
     const id = String(editIdFromNav || '').trim();
     if (!id) return;
-    setEditingId(id);
-    setModalOpen(true);
+    openEdit(id);
     if (typeof clearEditIdFromNav === 'function') clearEditIdFromNav();
-  }, [editIdFromNav, clearEditIdFromNav]);
+  }, [editIdFromNav]);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return products;
@@ -710,14 +711,6 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
 
   const openDetail = (id) => {
     if (typeof onOpenDetail === 'function') onOpenDetail(id);
-  };
-
-  const remove = (id) => {
-    if (!window.confirm('Supprimer ce produit ?')) return;
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-    deleteProduct(id).catch(() => {
-      // ignore
-    });
   };
 
   const save = () => {
@@ -783,19 +776,12 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
     setModalOpen(false);
   };
 
-  const onPickProductImage = async (e) => {
-    const file = e?.target?.files?.[0];
-    if (!file) return;
-    try {
-      setImageBusy(true);
-      const url = await uploadImageToCloudinary(file);
-      setForm((s) => ({ ...s, image: String(url || '').trim() }));
-    } catch {
+  const remove = (id) => {
+    if (!window.confirm('Supprimer ce produit ?')) return;
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    deleteProduct(id).catch(() => {
       // ignore
-    } finally {
-      setImageBusy(false);
-      if (productFileRef.current) productFileRef.current.value = '';
-    }
+    });
   };
 
   return (
@@ -810,12 +796,10 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
             </div>
             <button type="button" className="admin-btn admin-btn-primary" onClick={openCreate}>
               <Plus size={16} />
-              Nouveau
+              Ajouter
             </button>
           </div>
         </div>
-
-        {!filtered.length ? <div className="admin-empty">Aucun produit.</div> : null}
 
         <div className="admin-table-wrap">
           <table className="admin-table">
@@ -867,6 +851,10 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
             </tbody>
           </table>
 
+          {filtered.length === 0 ? (
+            <div className="admin-empty">Aucun résultat.</div>
+          ) : null}
+
           {filtered.length > pageSize ? (
             <div className="admin-pagination">
               <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setPage(1)} disabled={safePage === 1}>
@@ -890,7 +878,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
       </div>
 
       <Drawer
-        title={editingId ? 'Modifier le produit' : 'Nouveau produit'}
+        title={editing ? 'Modifier le produit' : 'Ajouter un produit'}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         footer={
@@ -954,9 +942,28 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
               onClick={() => (productFileRef.current ? productFileRef.current.click() : null)}
               disabled={imageBusy}
             >
-              {imageBusy ? 'Upload…' : '+Image'}
+              {imageBusy ? 'Upload…' : 'Uploader une image'}
             </button>
-            <input ref={productFileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickProductImage} />
+            <input
+              ref={productFileRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={async (e) => {
+                const file = e?.target?.files?.[0];
+                if (!file) return;
+                try {
+                  setImageBusy(true);
+                  const url = await uploadImageToCloudinary(file);
+                  setForm((s) => ({ ...s, image: url }));
+                } catch {
+                  // ignore
+                } finally {
+                  setImageBusy(false);
+                  if (productFileRef.current) productFileRef.current.value = '';
+                }
+              }}
+            />
           </div>
           <div className="admin-form-group admin-form-full">
             <label>Description</label>
@@ -1057,11 +1064,11 @@ function AdminOrders({ externalQuery = '' }) {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>N° de commande</th>
+                <th>Order ID</th>
                 <th>Client</th>
                 <th>Date</th>
                 <th>Total</th>
-                <th>Statut</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -1151,7 +1158,7 @@ function AdminBlog({ posts, setPosts, onOpenDetail }) {
                 <th>Auteur</th>
                 <th>Catégorie</th>
                 <th>Date</th>
-                <th>Statut</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1221,10 +1228,9 @@ function AdminPostEditor({ userEmail, posts, setPosts, postId, onBack }) {
   const [saving, setSaving] = useState(false);
   const [mediaBusy, setMediaBusy] = useState(false);
   const [form, setForm] = useState(() => ({
-    id: postId || uid('post'),
     title: existing?.title || '',
     author: existing?.author || 'Mey Beauty',
-    category: existing?.category || 'Bien‑être',
+    category: existing?.category || 'Wellness',
     status: existing?.status || 'draft',
     excerpt: existing?.excerpt || '',
     image: existing?.image || '',
