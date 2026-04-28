@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useBlog } from '../context/BlogContext.jsx';
 
 const TAGS = ['Institut', 'Spa', 'Soin Visage', 'Bien‑être', 'Massage'];
@@ -5,6 +6,39 @@ const TAGS = ['Institut', 'Spa', 'Soin Visage', 'Bien‑être', 'Massage'];
 export default function BlogPage() {
   const { posts, loading, error } = useBlog();
   const items = posts || [];
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    const hash = String(window.location.hash || '');
+    if (!hash.startsWith('#blog')) return;
+    const idx = hash.indexOf('?');
+    if (idx < 0) return;
+    const qs = hash.slice(idx + 1);
+    const params = new URLSearchParams(qs);
+    const q = params.get('search');
+    if (q) setQuery(String(q));
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) return items;
+    return items.filter((p) => {
+      const hay = [p.title, p.excerpt, p.category, p.author, p.dateLabel, p.date]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [items, query]);
+
+  const onSubmitSearch = () => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      // ignore
+    }
+  };
+
   return (
     <main className="blog-page">
       <section className="page-hero-banner" aria-label="Bannière">
@@ -23,10 +57,10 @@ export default function BlogPage() {
               <div className="admin-empty">Chargement des articles…</div>
             ) : error ? (
               <div className="admin-empty">{String(error || 'Erreur de chargement')}</div>
-            ) : items.length === 0 ? (
+            ) : filtered.length === 0 ? (
               <div className="admin-empty">Aucun article pour le moment.</div>
             ) : null}
-            {items.map((p) => (
+            {filtered.map((p) => (
               <article key={p.id} className="article-card">
                 <div className="article-img-wrap">
                   <img src={p.image} alt={p.title} className="article-img" loading="lazy" />
@@ -49,8 +83,16 @@ export default function BlogPage() {
 
         <aside className="sidebar" aria-label="Sidebar">
           <div className="sidebar-search">
-            <input type="text" placeholder="Rechercher…" />
-            <button type="button" aria-label="Rechercher">
+            <input
+              type="text"
+              placeholder="Rechercher…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') onSubmitSearch();
+              }}
+            />
+            <button type="button" aria-label="Rechercher" onClick={onSubmitSearch}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
@@ -62,13 +104,18 @@ export default function BlogPage() {
             <div className="sidebar-title">Articles récents</div>
             <div className="recent-posts">
               {items.slice(0, 5).map((p) => (
-                <div key={`recent-${p.id}`} className="recent-post">
+                <a
+                  key={`recent-${p.id}`}
+                  className="recent-post"
+                  href={`#blog-detail?id=${encodeURIComponent(p.id)}`}
+                  aria-label={`Lire l’article ${p.title}`}
+                >
                   <img src={p.image} alt={p.title} className="recent-thumb" loading="lazy" />
                   <div className="recent-info">
                     <div className="recent-date">{String(p.dateLabel || p.date || '').split(' ')[0].toUpperCase()}</div>
                     <div className="recent-title">{p.title}</div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>

@@ -1,5 +1,5 @@
-export const CLOUDINARY_CLOUD_NAME = 'djdogxq0d';
-export const CLOUDINARY_UPLOAD_PRESET = 'leouiparfait';
+export const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+export const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 export async function uploadImageToCloudinary(file) {
   if (!file) throw new Error('Fichier manquant');

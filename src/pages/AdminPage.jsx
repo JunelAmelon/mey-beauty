@@ -1238,7 +1238,7 @@ function AdminPostEditor({ userEmail, posts, setPosts, postId, onBack }) {
       <div className="admin-editor-top">
         <div>
           <div className="admin-section-title">{isNew ? 'Créer un article' : "Modifier l'article"}</div>
-          <div className="admin-editor-sub">{userEmail || 'Admin'} · Blog</div>
+          <div className="admin-editor-sub">Melanie · Blog</div>
         </div>
         <div className="admin-editor-top-actions">
           <button type="button" className="admin-btn admin-btn-secondary" onClick={() => (typeof onBack === 'function' ? onBack() : null)}>
@@ -1425,7 +1425,7 @@ function AdminDashboard({ products, posts, userEmail, onGoProducts, onGoBlog }) 
     <div className="admin-page-view">
       <div className="admin-welcome-banner">
         <div className="admin-welcome-content">
-          <div className="admin-welcome-title">Bienvenue, {String(userEmail || 'Admin').split('@')[0]} </div>
+          <div className="admin-welcome-title">Bienvenue, Melanie </div>
           <div className="admin-welcome-subtitle">
             Voici un aperçu de vos performances aujourd’hui.
           </div>
@@ -1761,7 +1761,7 @@ export default function AdminPage() {
                     loading="lazy"
                   />
                   <div className="admin-user-info">
-                    <div className="admin-user-name">{user?.email || 'Admin'}</div>
+                    <div className="admin-user-name">Melanie</div>
                     <div className="admin-user-role">Administrateur</div>
                   </div>
                 </div>
@@ -1898,10 +1898,10 @@ function ProfileMenu({ userEmail, onLogout }) {
       </button>
       {open ? (
         <div className="admin-profile-dropdown" role="menu">
-          <div className="admin-profile-head">
-            <div className="admin-profile-title">Admin</div>
-            <div className="admin-profile-email">{userEmail || '—'}</div>
-          </div>
+              <div className="admin-profile-head">
+                <div className="admin-profile-title">Admin</div>
+                <div className="admin-profile-email">Melanie</div>
+              </div>
           <button type="button" className="admin-profile-item" onClick={() => (typeof onLogout === 'function' ? onLogout() : null)}>
             <LogOut size={16} />
             Déconnexion

@@ -12,6 +12,7 @@ function parsePostIdFromHash(hash) {
 export default function BlogDetailPage() {
   const { getPostById, posts } = useBlog();
   const [postId, setPostId] = useState(() => parsePostIdFromHash(window.location.hash || ''));
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     const onHash = () => setPostId(parsePostIdFromHash(window.location.hash || ''));
@@ -27,6 +28,21 @@ export default function BlogDetailPage() {
   const title = post?.title || 'Article';
   const hero = post?.image || '/soin visage (2).jpg';
   const dateLabel = post?.dateLabel || post?.date || '—';
+
+  const recent = useMemo(() => {
+    const list = Array.isArray(posts) ? posts.slice() : [];
+    list.sort((a, b) => {
+      const ta = new Date(a?.updatedAt || a?.date || 0).getTime();
+      const tb = new Date(b?.updatedAt || b?.date || 0).getTime();
+      return tb - ta;
+    });
+    return list.filter((p) => p && p.id && p.id !== postId).slice(0, 5);
+  }, [posts, postId]);
+
+  const onSubmitSearch = () => {
+    const q = String(query || '').trim();
+    window.location.hash = q ? `#blog?search=${encodeURIComponent(q)}` : '#blog';
+  };
 
   return (
     <main className="blog-detail-page">
@@ -107,8 +123,16 @@ export default function BlogDetailPage() {
 
         <aside className="sidebar" aria-label="Sidebar">
           <div className="sidebar-search">
-            <input type="text" placeholder="Rechercher…" />
-            <button type="button" aria-label="Rechercher">
+            <input
+              type="text"
+              placeholder="Rechercher…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') onSubmitSearch();
+              }}
+            />
+            <button type="button" aria-label="Rechercher" onClick={onSubmitSearch}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
@@ -119,41 +143,20 @@ export default function BlogDetailPage() {
           <div>
             <div className="sidebar-title">Articles récents</div>
             <div className="recent-posts">
-              <div className="recent-post">
-                <img src="/soin spa (2).jpg" alt="Spa" className="recent-thumb" loading="lazy" />
-                <div className="recent-info">
-                  <div className="recent-date">OCT 27</div>
-                  <div className="recent-title">Beauté &amp; spa : rituels bien‑être</div>
-                </div>
-              </div>
-              <div className="recent-post">
-                <img src="/beauté regard (3).jpg" alt="Regard" className="recent-thumb" loading="lazy" />
-                <div className="recent-info">
-                  <div className="recent-date">OCT 27</div>
-                  <div className="recent-title">Beauté du regard : astuces pro</div>
-                </div>
-              </div>
-              <div className="recent-post">
-                <img src="/soin minceur (2).jpg" alt="Minceur" className="recent-thumb" loading="lazy" />
-                <div className="recent-info">
-                  <div className="recent-date">OCT 27</div>
-                  <div className="recent-title">Minceur : se sentir bien dans son corps</div>
-                </div>
-              </div>
-              <div className="recent-post">
-                <img src="/massage-corps (2).jpg" alt="Massage" className="recent-thumb" loading="lazy" />
-                <div className="recent-info">
-                  <div className="recent-date">OCT 27</div>
-                  <div className="recent-title">Massages corps : anti‑stress et énergie</div>
-                </div>
-              </div>
-              <div className="recent-post">
-                <img src="/soin visage (2).jpg" alt="Soin visage" className="recent-thumb" loading="lazy" />
-                <div className="recent-info">
-                  <div className="recent-date">OCT 27</div>
-                  <div className="recent-title">Soin visage : éclat et hydratation</div>
-                </div>
-              </div>
+              {recent.map((p) => (
+                <a
+                  key={`recent-${p.id}`}
+                  className="recent-post"
+                  href={`#blog-detail?id=${encodeURIComponent(p.id)}`}
+                  aria-label={`Lire l’article ${p.title}`}
+                >
+                  <img src={p.image} alt={p.title} className="recent-thumb" loading="lazy" />
+                  <div className="recent-info">
+                    <div className="recent-date">{String(p.dateLabel || p.date || '').split(' ')[0].toUpperCase()}</div>
+                    <div className="recent-title">{p.title}</div>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
 
