@@ -24,7 +24,7 @@ export default function App() {
       setHash(next);
 
       const isAdminHash = next.startsWith('#admin');
-      document.documentElement.style.zoom = isAdminHash ? '100%' : '92%';
+      document.documentElement.style.zoom = isAdminHash ? '100%' : '100%';
 
       if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog' || next.startsWith('#blog-detail') || next.startsWith('#shop') || next === '#cart' || next.startsWith('#product') || next.startsWith('#admin')) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
