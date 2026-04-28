@@ -1594,7 +1594,7 @@ function AdminDashboard({ products, posts, userEmail, onGoProducts, onGoBlog }) 
             href="#admin?view=products"
             style={{
               backgroundImage:
-                "url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&q=80')",
+                "url('beauté regard (3).jpg')",
             }}
           >
             <ShoppingBag size={18} />
