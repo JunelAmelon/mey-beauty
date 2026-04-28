@@ -2014,7 +2014,7 @@ a { text-decoration: none; color: inherit; }
 .about-video p {
   position: relative;
   z-index: 2;
-  color: color-mix(in srgb, var(--admin-text) 78%, transparent);
+  color: rgba(255,255,255,0.92);
   font-family: var(--font-corps);
   font-size: 14px;
   max-width: 560px;
