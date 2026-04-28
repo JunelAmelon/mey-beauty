@@ -3,6 +3,7 @@ import { Heart, Search, User } from 'lucide-react';
 import { formatPriceEUR, popularProductIds } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useCatalog } from '../context/CatalogContext.jsx';
+import { useWishlist } from '../context/WishlistContext.jsx';
 
 function parseProductIdFromHash(hash) {
   const idx = hash.indexOf('?');
@@ -11,7 +12,11 @@ function parseProductIdFromHash(hash) {
   return params.get('id');
 }
 
-function getDealEndDate() {
+function getDealEndDate(endsAt) {
+  if (endsAt) {
+    const d = new Date(endsAt);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
   const d = new Date();
   d.setDate(d.getDate() + 2);
   return d;
@@ -21,8 +26,8 @@ function format2(n) {
   return String(Math.max(0, n)).padStart(2, '0');
 }
 
-function DealTimer() {
-  const [end] = useState(() => getDealEndDate());
+function DealTimer({ endsAt }) {
+  const [end] = useState(() => getDealEndDate(endsAt));
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -107,6 +112,7 @@ function AccordionItem({ title, children, defaultOpen }) {
 
 export default function ProductDetailPage() {
   const { addItem } = useCart();
+  const { toggle, isWishlisted } = useWishlist();
   const { products: allProducts, getProductById } = useCatalog();
   const [productId, setProductId] = useState(() => parseProductIdFromHash(window.location.hash || ''));
   const product = useMemo(() => (productId ? getProductById(productId) : null), [productId, getProductById, allProducts]);
@@ -131,8 +137,17 @@ export default function ProductDetailPage() {
   const images = product?.images?.length ? product.images : ['/produits/produit (1).webp'];
   const [mainImg, setMainImg] = useState(images[0]);
   const [qty, setQty] = useState(1);
-  const [netQty, setNetQty] = useState('100g');
-  const [skinType, setSkinType] = useState('Normal');
+  const netQtyOptions = useMemo(
+    () => (Array.isArray(product?.netQuantities) && product.netQuantities.length ? product.netQuantities : ['50g', '100g', '150g', '250g']),
+    [product]
+  );
+  const skinTypeOptions = useMemo(
+    () => (Array.isArray(product?.skinTypes) && product.skinTypes.length ? product.skinTypes : ['Oil', 'Dry', 'Normal', 'All']),
+    [product]
+  );
+
+  const [netQty, setNetQty] = useState(() => '100g');
+  const [skinType, setSkinType] = useState(() => 'Normal');
   const [sidebarSearch, setSidebarSearch] = useState('');
 
   useEffect(() => {
@@ -144,6 +159,8 @@ export default function ProductDetailPage() {
   useEffect(() => {
     setMainImg(images[0]);
     setQty(1);
+    setNetQty(netQtyOptions[0] || '100g');
+    setSkinType(skinTypeOptions[0] || 'Normal');
   }, [productId]);
 
   if (!product) {
@@ -212,18 +229,18 @@ export default function ProductDetailPage() {
           <h1 className="pd-product-title">{product.name}</h1>
           <div className="pd-product-price">{formatPriceEUR(product.priceCents)}</div>
 
-          <DealTimer />
+          {product.promoEnabled ? <DealTimer endsAt={product.promoEndsAt} /> : null}
 
           <OptionGroup
             label="Net Quantity"
-            options={['50g', '100g', '150g', '250g']}
+            options={netQtyOptions}
             value={netQty}
             onChange={setNetQty}
           />
 
           <OptionGroup
             label="Skin Type"
-            options={['Oil', 'Dry', 'Normal', 'All']}
+            options={skinTypeOptions}
             value={skinType}
             onChange={setSkinType}
           />
@@ -231,6 +248,25 @@ export default function ProductDetailPage() {
           <p className="pd-product-desc">{product.description}</p>
 
           <div className="pd-add-row" aria-label="Ajout au panier">
+            <div className="pd-add-actions">
+              <button
+                type="button"
+                className="pd-btn-add-cart"
+                onClick={() => addItem(product, qty)}
+              >
+                Ajouter au panier
+              </button>
+
+              <button
+                type="button"
+                className={`pd-btn-wishlist${isWishlisted(product.id) ? ' active' : ''}`}
+                aria-label={isWishlisted(product.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                onClick={() => toggle(product.id)}
+              >
+                <Heart size={18} fill={isWishlisted(product.id) ? 'currentColor' : 'none'} />
+              </button>
+            </div>
+
             <div className="pd-qty-wrap">
               <button
                 type="button"
@@ -257,29 +293,27 @@ export default function ProductDetailPage() {
                 +
               </button>
             </div>
-
-            <button
-              type="button"
-              className="pd-btn-add-cart"
-              onClick={() => addItem(product, qty)}
-            >
-              Ajouter au panier
-            </button>
-
-            <button type="button" className="pd-btn-wishlist" aria-label="Ajouter aux favoris">
-              <Heart size={18} />
-            </button>
           </div>
 
           <div className="pd-accordion" aria-label="Informations">
             <AccordionItem title="Spécifications" defaultOpen>
-              <ul>
-                <li>Marque : {product.brand}</li>
-                <li>Catégorie : {product.category}</li>
-                <li>Prix TTC : {formatPriceEUR(product.priceCents)}</li>
-                <li>Net Quantity : {netQty}</li>
-                <li>Skin Type : {skinType}</li>
-              </ul>
+              {Array.isArray(product.specs) && product.specs.length ? (
+                <ul>
+                  {product.specs.map((s, idx) => (
+                    <li key={`${s?.label || 'spec'}-${idx}`}>{s?.label || '—'} : {s?.value || '—'}</li>
+                  ))}
+                  <li>Net Quantity : {netQty}</li>
+                  <li>Skin Type : {skinType}</li>
+                </ul>
+              ) : (
+                <ul>
+                  <li>Marque : {product.brand}</li>
+                  <li>Catégorie : {product.category}</li>
+                  <li>Prix TTC : {formatPriceEUR(product.priceCents)}</li>
+                  <li>Net Quantity : {netQty}</li>
+                  <li>Skin Type : {skinType}</li>
+                </ul>
+              )}
             </AccordionItem>
             <AccordionItem title="Livraison & retours">
               <p>

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Heart } from 'lucide-react';
 import { formatPriceEUR } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useCatalog } from '../context/CatalogContext.jsx';
+import { useWishlist } from '../context/WishlistContext.jsx';
 
 function parseSearchFromHash(hash) {
   const idx = hash.indexOf('?');
@@ -12,6 +14,7 @@ function parseSearchFromHash(hash) {
 
 export default function ShopPage() {
   const { addItem } = useCart();
+  const { toggle, isWishlisted } = useWishlist();
   const { products: allProducts } = useCatalog();
   const [activeCategory, setActiveCategory] = useState('');
   const [page, setPage] = useState(1);
@@ -175,6 +178,18 @@ export default function ShopPage() {
                 <div className="shop-product-info">
                   <div className="shop-product-name">{p.name}</div>
                   <div className="shop-product-price">{formatPriceEUR(p.priceCents)}</div>
+                  <button
+                    type="button"
+                    className={`shop-wishlist-btn${isWishlisted(p.id) ? ' active' : ''}`}
+                    aria-label={isWishlisted(p.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggle(p.id);
+                    }}
+                  >
+                    <Heart size={18} fill={isWishlisted(p.id) ? 'currentColor' : 'none'} />
+                  </button>
                   <button
                     type="button"
                     className="btn-read"

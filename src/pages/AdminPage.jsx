@@ -589,7 +589,7 @@ function AdminPostDetail({ post, onBack, onEdit }) {
   );
 }
 
-function AdminProducts({ products, setProducts, onOpenDetail }) {
+function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, clearEditIdFromNav }) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -601,6 +601,7 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
   const editing = useMemo(() => products.find((p) => p.id === editingId) || null, [products, editingId]);
 
   const [form, setForm] = useState({
+    brand: '',
     name: '',
     sku: '',
     category: '',
@@ -609,12 +610,18 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
     status: 'active',
     image: '',
     description: '',
+    netQuantitiesText: '',
+    skinTypesText: '',
+    promoEnabled: false,
+    promoEndsAt: '',
+    specsText: '',
   });
 
   useEffect(() => {
     if (!modalOpen) return;
     if (editing) {
       setForm({
+        brand: editing.brand || '',
         name: editing.name || '',
         sku: editing.sku || '',
         category: editing.category || '',
@@ -623,11 +630,38 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
         status: editing.status || 'active',
         image: editing.image || '',
         description: editing.description || '',
+        netQuantitiesText: Array.isArray(editing.netQuantities) ? editing.netQuantities.join(', ') : '',
+        skinTypesText: Array.isArray(editing.skinTypes) ? editing.skinTypes.join(', ') : '',
+        promoEnabled: Boolean(editing.promoEnabled),
+        promoEndsAt: editing.promoEndsAt || '',
+        specsText: Array.isArray(editing.specs) ? editing.specs.map((s) => `${s?.label || ''}:${s?.value || ''}`).join('\n') : '',
       });
     } else {
-      setForm({ name: '', sku: '', category: '', priceCents: 0, stock: 0, status: 'active', image: '', description: '' });
+      setForm({
+        brand: '',
+        name: '',
+        sku: '',
+        category: '',
+        priceCents: 0,
+        stock: 0,
+        status: 'active',
+        image: '',
+        description: '',
+        netQuantitiesText: '',
+        skinTypesText: '',
+        promoEnabled: false,
+        promoEndsAt: '',
+        specsText: '',
+      });
     }
   }, [modalOpen, editing]);
+
+  useEffect(() => {
+    const id = String(editIdFromNav || '').trim();
+    if (!id) return;
+    openEdit(id);
+    if (typeof clearEditIdFromNav === 'function') clearEditIdFromNav();
+  }, [editIdFromNav]);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return products;
@@ -664,8 +698,32 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
   };
 
   const save = () => {
+    const splitList = (s) =>
+      String(s || '')
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean);
+
+    const parseSpecs = (s) => {
+      const lines = String(s || '')
+        .split('\n')
+        .map((x) => x.trim())
+        .filter(Boolean);
+      return lines
+        .map((line) => {
+          const idx = line.indexOf(':');
+          if (idx < 0) return null;
+          const label = line.slice(0, idx).trim();
+          const value = line.slice(idx + 1).trim();
+          if (!label || !value) return null;
+          return { label, value };
+        })
+        .filter(Boolean);
+    };
+
     const payload = {
       id: editingId || uid('prod'),
+      brand: form.brand.trim() || 'Mey Beauty',
       name: form.name.trim() || 'Produit',
       sku: form.sku.trim() || (editingId || uid('SKU')),
       category: form.category.trim() || '—',
@@ -675,6 +733,11 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
       image: form.image.trim(),
       images: form.image.trim() ? [form.image.trim()] : [],
       description: form.description,
+      netQuantities: splitList(form.netQuantitiesText),
+      skinTypes: splitList(form.skinTypesText),
+      promoEnabled: Boolean(form.promoEnabled),
+      promoEndsAt: String(form.promoEndsAt || '').trim(),
+      specs: parseSpecs(form.specsText),
     };
 
     setProducts((prev) => {
@@ -807,6 +870,10 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
         }
       >
         <div className="admin-form-grid">
+          <div className="admin-form-group">
+            <label>Marque</label>
+            <input value={form.brand} onChange={(e) => setForm((s) => ({ ...s, brand: e.target.value }))} />
+          </div>
           <div className="admin-form-group admin-form-full">
             <label>Nom</label>
             <input value={form.name} onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))} />
@@ -872,6 +939,54 @@ function AdminProducts({ products, setProducts, onOpenDetail }) {
           <div className="admin-form-group admin-form-full">
             <label>Description</label>
             <textarea value={form.description} onChange={(e) => setForm((s) => ({ ...s, description: e.target.value }))} rows={4} />
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Net Quantity (options, séparées par des virgules)</label>
+            <input
+              value={form.netQuantitiesText}
+              onChange={(e) => setForm((s) => ({ ...s, netQuantitiesText: e.target.value }))}
+              placeholder="ex: 50g, 100g, 150g"
+            />
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Skin Type (options, séparées par des virgules)</label>
+            <input
+              value={form.skinTypesText}
+              onChange={(e) => setForm((s) => ({ ...s, skinTypesText: e.target.value }))}
+              placeholder="ex: Oil, Dry, Normal, All"
+            />
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Promo / Offre limitée</label>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <label style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="checkbox"
+                  checked={form.promoEnabled}
+                  onChange={(e) => setForm((s) => ({ ...s, promoEnabled: e.target.checked }))}
+                />
+                Activer le timer
+              </label>
+              <input
+                type="datetime-local"
+                value={form.promoEndsAt}
+                onChange={(e) => setForm((s) => ({ ...s, promoEndsAt: e.target.value }))}
+                style={{ minWidth: 220 }}
+              />
+            </div>
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Spécifications (1 par ligne: label: valeur)</label>
+            <textarea
+              value={form.specsText}
+              onChange={(e) => setForm((s) => ({ ...s, specsText: e.target.value }))}
+              rows={5}
+              placeholder={'Marque: Botan\nCatégorie: Autobronzants & solaires'}
+            />
           </div>
         </div>
       </Drawer>
@@ -1529,6 +1644,7 @@ function parseAdminState(hash) {
   return {
     view: params.get('view') || 'dashboard',
     id: params.get('id') || '',
+    edit: params.get('edit') || '',
   };
 }
 
@@ -1590,6 +1706,7 @@ export default function AdminPage() {
 
   const view = state.view;
   const selectedId = state.id;
+  const editIdFromNav = state.edit;
   const title =
     view === 'products'
       ? 'Produits'
@@ -1817,12 +1934,14 @@ export default function AdminPage() {
                 }
                 setProducts={setProducts}
                 onOpenDetail={(id) => setAdminHash({ view: 'product', id })}
+                editIdFromNav={editIdFromNav}
+                clearEditIdFromNav={() => setAdminHash({ view: 'products' })}
               />
             ) : view === 'product' ? (
               <AdminProductDetail
                 product={selectedProduct}
                 onBack={() => setAdminHash({ view: 'products' })}
-                onEdit={() => setAdminHash({ view: 'products' })}
+                onEdit={() => setAdminHash({ view: 'products', edit: selectedId })}
               />
             ) : view === 'orders' ? (
               <AdminOrders externalQuery={effectiveTopbarQuery} />
