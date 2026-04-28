@@ -4079,6 +4079,32 @@ a { text-decoration: none; color: inherit; }
   background: var(--admin-card);
 }
 
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar {
+  background: color-mix(in srgb, var(--admin-card) 92%, transparent);
+}
+
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar .ql-stroke {
+  stroke: var(--admin-text);
+}
+
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar .ql-fill {
+  fill: var(--admin-text);
+}
+
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar .ql-picker {
+  color: var(--admin-text);
+}
+
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar .ql-picker-options {
+  background: var(--admin-panel);
+  border: 1px solid var(--admin-border);
+}
+
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar .ql-picker-item,
+.admin-page[data-theme="dark"] .admin-quill .ql-toolbar .ql-picker-label {
+  color: var(--admin-text);
+}
+
 .admin-page .admin-quill .ql-container {
   border: 1px solid var(--admin-border);
   border-radius: 12px;
@@ -4563,6 +4589,13 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 2px 8px rgba(74, 46, 36, 0.04);
 }
 
+.admin-page[data-theme="dark"] .admin-btn-secondary {
+  background: color-mix(in srgb, var(--admin-card) 92%, transparent);
+  border: 1px solid var(--admin-border);
+  box-shadow: none;
+  color: var(--admin-text);
+}
+
 .admin-page .admin-btn-secondary:hover {
   background: color-mix(in srgb, var(--nude) 22%, #ffffff);
   border-color: color-mix(in srgb, var(--nude) 70%, var(--admin-border));
@@ -4706,11 +4739,25 @@ a { text-decoration: none; color: inherit; }
   transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition);
 }
 
+.admin-page[data-theme="dark"] .admin-action-btn {
+  background: color-mix(in srgb, var(--admin-card) 92%, transparent);
+  border-color: var(--admin-border);
+  box-shadow: none;
+  color: var(--admin-text);
+}
+
 .admin-page .admin-action-btn:hover {
   background: color-mix(in srgb, var(--nude) 22%, #ffffff);
   border-color: color-mix(in srgb, var(--nude) 70%, var(--admin-border));
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(74, 46, 36, 0.08);
+}
+
+.admin-page[data-theme="dark"] .admin-action-btn:hover {
+  background: color-mix(in srgb, var(--admin-card) 82%, transparent);
+  border-color: var(--admin-border);
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 1100px) {
@@ -4748,10 +4795,6 @@ a { text-decoration: none; color: inherit; }
   .admin-page .admin-topbar { gap: 12px; }
   .admin-page .admin-topbar-actions { flex-wrap: wrap; justify-content: flex-end; }
   .admin-page .admin-topbar-search { width: min(360px, 100%); }
-
-  .admin-page .admin-mobile-menu-btn {
-    display: inline-flex;
-  }
 }
 
 @media (max-width: 760px) {
@@ -4771,6 +4814,10 @@ a { text-decoration: none; color: inherit; }
 
   .admin-page .admin-topbar-title {
     font-size: 22px;
+  }
+
+  .admin-page .admin-mobile-menu-btn {
+    display: inline-flex;
   }
 
   .admin-page .admin-topbar-actions {
