@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { products as allProducts, formatPriceEUR } from '../data/products.js';
+import { formatPriceEUR } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
+import { useCatalog } from '../context/CatalogContext.jsx';
 
 function parseSearchFromHash(hash) {
   const idx = hash.indexOf('?');
@@ -11,6 +12,7 @@ function parseSearchFromHash(hash) {
 
 export default function ShopPage() {
   const { addItem } = useCart();
+  const { products: allProducts } = useCatalog();
   const [activeCategory, setActiveCategory] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 9;
@@ -23,12 +25,12 @@ export default function ShopPage() {
   }, []);
 
   const categories = useMemo(() => {
-    const set = new Set(allProducts.map((p) => p.category).filter(Boolean));
+    const set = new Set((allProducts || []).map((p) => p.category).filter(Boolean));
     return Array.from(set);
-  }, []);
+  }, [allProducts]);
 
   const products = useMemo(() => {
-    let list = allProducts;
+    let list = allProducts || [];
     if (activeCategory) list = list.filter((p) => p.category === activeCategory);
     if (search) {
       const q = search.toLowerCase();

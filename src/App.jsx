@@ -12,6 +12,7 @@ import BlogDetailPage from './pages/BlogDetailPage.jsx';
 import ShopPage from './pages/ShopPage.jsx';
 import ProductDetailPage from './pages/ProductDetailPage.jsx';
 import CartPage from './pages/CartPage.jsx';
+import AdminPage from './pages/AdminPage.jsx';
 import { useEffect, useState } from 'react';
 
 export default function App() {
@@ -22,7 +23,7 @@ export default function App() {
       const next = window.location.hash || '#home';
       setHash(next);
 
-      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog' || next === '#blog-detail' || next.startsWith('#shop') || next === '#cart' || next.startsWith('#product')) {
+      if (next === '#home' || next === '#about' || next === '#legal' || next === '#privacy' || next === '#contact' || next === '#blog' || next.startsWith('#blog-detail') || next.startsWith('#shop') || next === '#cart' || next.startsWith('#product') || next.startsWith('#admin')) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     };
@@ -36,16 +37,19 @@ export default function App() {
   if (hash === '#privacy') page = 'privacy';
   if (hash === '#contact') page = 'contact';
   if (hash === '#blog') page = 'blog';
-  if (hash === '#blog-detail') page = 'blog-detail';
+  if (hash.startsWith('#blog-detail')) page = 'blog-detail';
   if (hash.startsWith('#shop')) page = 'shop';
   if (hash === '#cart') page = 'cart';
   if (hash.startsWith('#product')) page = 'product';
+  if (hash.startsWith('#admin')) page = 'admin';
+
+  const isAdmin = page === 'admin';
 
   return (
     <>
-      <AnnounceBar />
-      <Navbar />
-      <RecentPurchaseToast />
+      {isAdmin ? null : <AnnounceBar />}
+      {isAdmin ? null : <Navbar />}
+      {isAdmin ? null : <RecentPurchaseToast />}
       {page === 'about' ? (
         <AboutPage />
       ) : page === 'legal' ? (
@@ -64,10 +68,12 @@ export default function App() {
         <CartPage />
       ) : page === 'product' ? (
         <ProductDetailPage />
+      ) : page === 'admin' ? (
+        <AdminPage />
       ) : (
         <HomePage />
       )}
-      <Footer />
+      {isAdmin ? null : <Footer />}
     </>
   );
 }

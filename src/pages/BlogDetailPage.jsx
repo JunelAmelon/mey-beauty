@@ -1,6 +1,33 @@
 import { User } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useBlog } from '../context/BlogContext.jsx';
+
+function parsePostIdFromHash(hash) {
+  const idx = hash.indexOf('?');
+  const query = idx >= 0 ? hash.slice(idx + 1) : '';
+  const params = new URLSearchParams(query);
+  return params.get('id');
+}
 
 export default function BlogDetailPage() {
+  const { getPostById, posts } = useBlog();
+  const [postId, setPostId] = useState(() => parsePostIdFromHash(window.location.hash || ''));
+
+  useEffect(() => {
+    const onHash = () => setPostId(parsePostIdFromHash(window.location.hash || ''));
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const post = useMemo(() => {
+    if (!postId) return null;
+    return getPostById(postId);
+  }, [postId, getPostById, posts]);
+
+  const title = post?.title || 'Article';
+  const hero = post?.image || '/soin visage (2).jpg';
+  const dateLabel = post?.dateLabel || post?.date || '—';
+
   return (
     <main className="blog-detail-page">
       <section className="page-hero-banner" aria-label="Bannière">
@@ -17,15 +44,15 @@ export default function BlogDetailPage() {
       <section className="blog-detail-layout" aria-label="Détail de l’article">
         <article className="blog-detail-article">
           <img
-            src="/soin visage (2).jpg"
-            alt="Soin visage en institut"
+            src={hero}
+            alt={title}
             className="blog-article-hero"
             loading="lazy"
           />
 
           <div className="blog-article-meta">
             <div className="blog-article-meta-left">
-              27 OCTOBRE, 2024
+              {String(dateLabel).toUpperCase()}
               <span className="sep">/</span>
               1 COMMENTAIRE
             </div>
@@ -41,57 +68,24 @@ export default function BlogDetailPage() {
           </div>
 
           <h1 className="blog-article-h1">
-            Les rituels de soin visage en institut : éclat, détente et résultats visibles
+            {title}
           </h1>
 
-          <p className="blog-article-p">
-            Un soin visage en institut, ce n’est pas seulement un moment de douceur : c’est une approche
-            professionnelle qui combine diagnostic, gestes experts, actifs adaptés et massages ciblés.
-            Chez Mey Beauty, nous construisons chaque séance autour de votre peau et de vos objectifs (éclat,
-            hydratation, imperfections, confort, anti‑âge).
-          </p>
-
-          <h2 className="blog-article-h2">Ce que vous apporte un soin en institut</h2>
-
-          <p className="blog-article-p">
-            Le protocole associe nettoyage profond, exfoliation, extraction douce si nécessaire, masques
-            adaptés et sérums spécifiques. Le massage stimule la micro‑circulation, améliore la pénétration
-            des actifs et apporte une détente immédiate.
-          </p>
-
-          <div className="blog-article-img-row" aria-label="Galerie">
-            <img src="/soin spa (2).jpg" alt="Rituel spa" loading="lazy" />
-            <img src="/massage-corps (2).jpg" alt="Massage bien‑être" loading="lazy" />
-          </div>
-
-          <p className="blog-article-p">
-            Pour prolonger les bénéfices, nous vous conseillons une routine simple et cohérente : un nettoyage
-            adapté, une hydratation quotidienne et une protection solaire. Sur le long terme, la régularité est
-            la clé pour stabiliser la peau et maintenir l’éclat.
-          </p>
-
-          <h2 className="blog-article-h2">Nos recommandations (simples et efficaces)</h2>
-
-          <ul className="blog-article-list">
-            <li>Faire un diagnostic de peau avant toute routine.</li>
-            <li>Choisir des actifs adaptés à votre objectif (hydratation, imperfections, éclat, anti‑âge).</li>
-            <li>Garder une exfoliation douce et régulière, sans agresser.</li>
-            <li>Ne pas négliger le cou et le décolleté.</li>
-            <li>Associer soin visage et massages pour relâcher les tensions.</li>
-            <li>Stabiliser avec une protection solaire quotidienne.</li>
-            <li>Prévoir une cure (3 à 6 séances) pour un résultat visible.</li>
-            <li>Adapter la routine à la saison (froid, chaleur, humidité).</li>
-            <li>Hydrater et apaiser après une journée chargée.</li>
-            <li>Demander un plan d’entretien personnalisé.</li>
-          </ul>
-
-          <div className="blog-article-quote">
-            <p>
-              « La vraie beauté, c’est l’équilibre : une peau respectée, des gestes réguliers et un moment de
-              détente qui vous ressemble. »
-            </p>
-            <cite>— Mey Beauty</cite>
-          </div>
+          {post ? (
+            <div
+              className="blog-article-rich"
+              dangerouslySetInnerHTML={{ __html: post.contentHtml || `<p>${post.excerpt || ''}</p>` }}
+            />
+          ) : (
+            <div className="legal-block">
+              <h2>Article introuvable</h2>
+              <p>
+                Cet article n’existe pas ou a été retiré.
+                <br />
+                <a href="#blog">Retour au blog</a>
+              </p>
+            </div>
+          )}
 
           <div className="comments-section">
             <div className="comments-title">Commentaires ( 1 )</div>

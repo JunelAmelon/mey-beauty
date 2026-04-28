@@ -5,6 +5,11 @@ export default function useRevealOnScroll(selector = '.reveal', options = { thre
     const elements = document.querySelectorAll(selector);
     if (!elements.length) return;
 
+    if (typeof window === 'undefined' || typeof window.IntersectionObserver !== 'function') {
+      elements.forEach((el) => el.classList.add('visible'));
+      return;
+    }
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
@@ -17,5 +22,5 @@ export default function useRevealOnScroll(selector = '.reveal', options = { thre
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [selector, options]);
+  }, [selector, JSON.stringify(options)]);
 }

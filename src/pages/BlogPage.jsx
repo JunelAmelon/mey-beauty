@@ -1,41 +1,10 @@
-const POSTS = [
-  {
-    id: 1,
-    date: '27 Octobre 2024',
-    title: 'Beauté & Spa : rituels bien‑être à adopter',
-    excerpt:
-      'Inspirations spa, gestes experts et conseils pour une peau lumineuse et un esprit apaisé.',
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
-    id: 2,
-    date: '27 Octobre 2024',
-    title: 'Préparer sa peau avant un événement',
-    excerpt:
-      'Notre routine sur‑mesure pour un teint éclatant : nettoyage, hydratation, massage et éclat.',
-    image: 'https://images.unsplash.com/photo-1604654894611-6973b376cbde?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
-    id: 3,
-    date: '27 Octobre 2024',
-    title: 'Anti‑stress : détente & massages corps',
-    excerpt:
-      'Comment relâcher les tensions et retrouver l’énergie grâce aux massages corps et aux soins spa.',
-    image: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
-    id: 4,
-    date: '27 Octobre 2024',
-    title: 'Beauté du regard : rehaussement & brow lift',
-    excerpt:
-      'Les bonnes pratiques pour un regard structuré, naturel et longue tenue.',
-    image: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=1400&q=80',
-  },
-];
+import { useBlog } from '../context/BlogContext.jsx';
 
 const TAGS = ['Institut', 'Spa', 'Soin Visage', 'Bien‑être', 'Massage'];
 
 export default function BlogPage() {
+  const { posts, loading, error } = useBlog();
+  const items = posts || [];
   return (
     <main className="blog-page">
       <section className="page-hero-banner" aria-label="Bannière">
@@ -50,15 +19,22 @@ export default function BlogPage() {
       <section className="blog-layout" aria-label="Articles">
         <div>
           <div className="articles-grid">
-            {POSTS.map((p) => (
+            {loading ? (
+              <div className="admin-empty">Chargement des articles…</div>
+            ) : error ? (
+              <div className="admin-empty">{String(error || 'Erreur de chargement')}</div>
+            ) : items.length === 0 ? (
+              <div className="admin-empty">Aucun article pour le moment.</div>
+            ) : null}
+            {items.map((p) => (
               <article key={p.id} className="article-card">
                 <div className="article-img-wrap">
                   <img src={p.image} alt={p.title} className="article-img" loading="lazy" />
                 </div>
-                <div className="article-date">{p.date}</div>
+                <div className="article-date">{p.dateLabel || p.date}</div>
                 <h2 className="article-title">{p.title}</h2>
                 <p className="article-excerpt">{p.excerpt}</p>
-                <a href="#blog-detail" className="btn-read">Lire plus</a>
+                <a href={`#blog-detail?id=${encodeURIComponent(p.id)}`} className="btn-read">Lire plus</a>
               </article>
             ))}
           </div>
@@ -85,11 +61,11 @@ export default function BlogPage() {
           <div>
             <div className="sidebar-title">Articles récents</div>
             <div className="recent-posts">
-              {POSTS.slice(0, 5).map((p) => (
+              {items.slice(0, 5).map((p) => (
                 <div key={`recent-${p.id}`} className="recent-post">
                   <img src={p.image} alt={p.title} className="recent-thumb" loading="lazy" />
                   <div className="recent-info">
-                    <div className="recent-date">{p.date.split(' ')[0].toUpperCase()}</div>
+                    <div className="recent-date">{String(p.dateLabel || p.date || '').split(' ')[0].toUpperCase()}</div>
                     <div className="recent-title">{p.title}</div>
                   </div>
                 </div>

@@ -1,7 +1,8 @@
 import useRevealOnScroll from '../hooks/useRevealOnScroll.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getPopularProducts, formatPriceEUR } from '../data/products.js';
+import { formatPriceEUR, popularProductIds } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
+import { useCatalog } from '../context/CatalogContext.jsx';
 
 function Stars({ value }) {
   const total = 5;
@@ -24,11 +25,17 @@ export default function ProductsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const { addItem } = useCart();
+  const { products: allProducts } = useCatalog();
   const cardRefs = useRef([]);
   const gridRef = useRef(null);
   const sectionRef = useRef(null);
   const [isSectionVisible, setIsSectionVisible] = useState(true);
-  const items = useMemo(() => getPopularProducts(), []);
+  const items = useMemo(() => {
+    const byId = new Map((allProducts || []).map((p) => [p.id, p]));
+    const picked = popularProductIds.map((id) => byId.get(id)).filter(Boolean);
+    if (picked.length) return picked;
+    return (allProducts || []).slice(0, 8);
+  }, [allProducts]);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 760px)');

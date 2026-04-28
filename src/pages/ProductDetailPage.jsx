@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Heart, Search, User } from 'lucide-react';
-import { getPopularProducts, getProductById, formatPriceEUR } from '../data/products.js';
+import { formatPriceEUR, popularProductIds } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
+import { useCatalog } from '../context/CatalogContext.jsx';
 
 function parseProductIdFromHash(hash) {
   const idx = hash.indexOf('?');
@@ -106,13 +107,26 @@ function AccordionItem({ title, children, defaultOpen }) {
 
 export default function ProductDetailPage() {
   const { addItem } = useCart();
+  const { products: allProducts, getProductById } = useCatalog();
   const [productId, setProductId] = useState(() => parseProductIdFromHash(window.location.hash || ''));
-  const product = useMemo(() => (productId ? getProductById(productId) : null), [productId]);
-  const related = useMemo(
-    () => getPopularProducts().filter((p) => p.id !== productId).slice(0, 3),
-    [productId]
-  );
-  const mini = useMemo(() => getPopularProducts().slice(0, 5), []);
+  const product = useMemo(() => (productId ? getProductById(productId) : null), [productId, getProductById, allProducts]);
+  const related = useMemo(() => {
+    const byId = new Map((allProducts || []).map((p) => [p.id, p]));
+    const picked = popularProductIds
+      .map((id) => byId.get(id))
+      .filter(Boolean)
+      .filter((p) => p.id !== productId)
+      .slice(0, 3);
+    if (picked.length) return picked;
+    return (allProducts || []).filter((p) => p.id !== productId).slice(0, 3);
+  }, [allProducts, productId]);
+
+  const mini = useMemo(() => {
+    const byId = new Map((allProducts || []).map((p) => [p.id, p]));
+    const picked = popularProductIds.map((id) => byId.get(id)).filter(Boolean).slice(0, 5);
+    if (picked.length) return picked;
+    return (allProducts || []).slice(0, 5);
+  }, [allProducts]);
 
   const images = product?.images?.length ? product.images : ['/produits/produit (1).webp'];
   const [mainImg, setMainImg] = useState(images[0]);
