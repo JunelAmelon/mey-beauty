@@ -126,7 +126,7 @@ function seedAdminPosts() {
       date: '2024-10-28',
       excerpt:
         'Peau terne, tiraillements, manque d’éclat ? Voici une routine et des techniques simples pour hydrater et illuminer le visage durablement.',
-      image: img('/soin visage (2).jpg'),
+      image: img('/soin visage (2).PNG'),
       contentHtml: `
         <p class="blog-article-p">L’éclat ne se résume pas à un “effet glow” immédiat. Une peau lumineuse est une peau équilibrée : bien hydratée, protégée, et soutenue par une barrière cutanée forte. On te guide pas à pas.</p>
 
@@ -144,8 +144,8 @@ function seedAdminPosts() {
         </ul>
 
         <div class="blog-article-img-row">
-          <img src="${img('/soin visage (1).jpg')}" alt="Soin visage" />
-          <img src="${img('/beauté regard (3).jpg')}" alt="Regard" />
+          <img src="${img('/soin visage (1).PNG')}" alt="Soin visage" />
+          <img src="${img('/beauté regard (3).PNG')}" alt="Regard" />
         </div>
 
         <div class="blog-article-quote">
@@ -165,7 +165,7 @@ function seedAdminPosts() {
       date: '2024-10-29',
       excerpt:
         'Cils, sourcils, contour de l’œil : les bons réflexes pour un regard frais et structuré, même sans maquillage.',
-      image: img('/beauté regard (3).jpg'),
+      image: img('/beauté regard (3).PNG'),
       contentHtml: `
         <p class="blog-article-p">Un regard reposé peut transformer tout le visage. La zone du contour de l’œil est fine et fragile : elle a besoin de douceur, de drainage, et d’une routine ciblée.</p>
 
@@ -173,7 +173,7 @@ function seedAdminPosts() {
         <p class="blog-article-p">Le froid aide à décongestionner. Le drainage relance la circulation. Ensemble, ils réduisent l’apparence des poches et réveillent le regard.</p>
 
         <div class="blog-article-img-row">
-          <img src="${img('/beauté regard (1).jpg')}" alt="Contour des yeux" />
+          <img src="${img('/Beauty regard.JPG')}" alt="Contour des yeux" />
           <img src="${img('/beauté regard (2).jpg')}" alt="Sourcils" />
         </div>
 

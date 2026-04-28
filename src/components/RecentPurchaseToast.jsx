@@ -5,7 +5,7 @@ const PEOPLE = ['Inès', 'Sofia', 'Maya', 'Emma', 'Lina', 'Nora', 'Sarah', 'Aya'
 const CITIES = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice', 'Toulouse', 'Nantes', 'Montpellier', 'Lille', 'Strasbourg', 'Rennes', 'Grenoble', 'Dijon', 'Reims', 'Rouen', 'Tours', 'Aix-en-Provence', 'Metz', 'Avignon', 'Angers'];
 
 const SERVICES = [
-  { title: 'Soin du visage', image: '/soin visage (1).jpg' },
+  { title: 'Soin du visage', image: '/soin%20visage%20(1).PNG' },
   { title: 'Soins minceur et bien‑être', image: '/soin minceur (1).jpg' },
   { title: 'Soin spa', image: '/soin spa (2).jpg' },
   { title: 'Massages corps', image: '/massage-corps (2).jpg' },

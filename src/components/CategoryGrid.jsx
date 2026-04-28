@@ -8,7 +8,7 @@ const CATS = [
     title: 'Soin du visage\nSur‑mesure',
     cta: '— Réserver maintenant —',
     video: 'https://www.pexels.com/fr-fr/download/video/9335813/',
-    image: 'soin visage (2).jpg',
+    image: 'soin visage (2).PNG',
   },
   {
     id: 'cat-2',

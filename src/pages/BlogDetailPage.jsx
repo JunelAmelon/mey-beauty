@@ -26,7 +26,7 @@ export default function BlogDetailPage() {
   }, [postId, getPostById, posts]);
 
   const title = post?.title || 'Article';
-  const hero = post?.image || '/soin visage (2).jpg';
+  const hero = post?.image || '/soin%20visage%20(2).PNG';
   const dateLabel = post?.dateLabel || post?.date || '—';
 
   const recent = useMemo(() => {
@@ -162,11 +162,11 @@ export default function BlogDetailPage() {
 
           <div>
             <div className="sidebar-gallery" aria-label="Galerie">
-              <img src="/soin visage (2).jpg" alt="Soin visage" className="gallery-img" loading="lazy" />
-              <img src="/soin spa (2).jpg" alt="Spa" className="gallery-img" loading="lazy" />
-              <img src="/massage-corps (2).jpg" alt="Massage" className="gallery-img" loading="lazy" />
-              <img src="/soin minceur (2).jpg" alt="Minceur" className="gallery-img" loading="lazy" />
-              <img src="/beauté regard (3).jpg" alt="Regard" className="gallery-img" loading="lazy" />
+              <img src="/soin%20visage%20(2).PNG" alt="Soin visage" className="gallery-img" loading="lazy" />
+              <img src="/soin%20spa%20(2).jpg" alt="Spa" className="gallery-img" loading="lazy" />
+              <img src="/massage-corps%20(2).jpg" alt="Massage" className="gallery-img" loading="lazy" />
+              <img src="/soin%20minceur%20(2).jpg" alt="Minceur" className="gallery-img" loading="lazy" />
+              <img src="/beauté%20regard%20(3).PNG" alt="Regard" className="gallery-img" loading="lazy" />
               <img src="/meybeauty.jpg" alt="Institut" className="gallery-img" loading="lazy" />
             </div>
           </div>
@@ -182,7 +182,7 @@ export default function BlogDetailPage() {
           </div>
 
           <div className="sidebar-banner" aria-label="Bannière">
-            <img src="/soin spa (1).JPG" alt="Mey Beauty" loading="lazy" />
+            <img src="/soin%20spa%20(1).JPG" alt="Mey Beauty" loading="lazy" />
             <div className="banner-overlay">
               <div className="banner-logo">Mey Beauty</div>
               <div className="banner-sub">Spa · Massages · Visage</div>
