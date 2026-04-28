@@ -75,7 +75,7 @@ const SLIDES = [
     subtitle:
       'beaute du regard : rehaussement, brow lift, teinture — un résultat élégant et précis.',
     leftImage: 'regard.jpg',
-    rightImage: 'beauté regard (3).jpg',
+    rightImage: 'beauté regard (3).PNG',
   },
 ];
 
