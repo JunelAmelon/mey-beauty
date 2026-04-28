@@ -670,7 +670,350 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
     }
   }, [modalOpen, editing]);
 
-  // ... rest of the code remains the same ...
+  useEffect(() => {
+    const id = String(editIdFromNav || '').trim();
+    if (!id) return;
+    setEditingId(id);
+    setModalOpen(true);
+    if (typeof clearEditIdFromNav === 'function') clearEditIdFromNav();
+  }, [editIdFromNav, clearEditIdFromNav]);
+
+  const filtered = useMemo(() => {
+    if (!query.trim()) return products;
+    const q = query.trim().toLowerCase();
+    return products.filter((p) => {
+      const hay = [p.name, p.sku, p.category, p.status].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [products, query]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, products.length]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const paged = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return filtered.slice(start, start + pageSize);
+  }, [filtered, safePage]);
+
+  const openCreate = () => {
+    setEditingId('');
+    setModalOpen(true);
+  };
+
+  const openEdit = (id) => {
+    setEditingId(id);
+    setModalOpen(true);
+  };
+
+  const openDetail = (id) => {
+    if (typeof onOpenDetail === 'function') onOpenDetail(id);
+  };
+
+  const remove = (id) => {
+    if (!window.confirm('Supprimer ce produit ?')) return;
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    deleteProduct(id).catch(() => {
+      // ignore
+    });
+  };
+
+  const save = () => {
+    const parseEurosToCents = (v) => {
+      const raw = String(v ?? '').trim().replace(',', '.');
+      const n = Number(raw);
+      if (!Number.isFinite(n)) return 0;
+      return Math.max(0, Math.round(n * 100));
+    };
+
+    const splitList = (s) =>
+      String(s || '')
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean);
+
+    const parseSpecs = (s) => {
+      const lines = String(s || '')
+        .split('\n')
+        .map((x) => x.trim())
+        .filter(Boolean);
+      return lines
+        .map((line) => {
+          const idx = line.indexOf(':');
+          if (idx < 0) return null;
+          const label = line.slice(0, idx).trim();
+          const value = line.slice(idx + 1).trim();
+          if (!label || !value) return null;
+          return { label, value };
+        })
+        .filter(Boolean);
+    };
+
+    const payload = {
+      id: editingId || uid('prod'),
+      brand: form.brand.trim() || 'Mey Beauty',
+      name: form.name.trim() || 'Produit',
+      sku: form.sku.trim() || (editingId || uid('SKU')),
+      category: form.category.trim() || '—',
+      priceCents: parseEurosToCents(form.priceEuros),
+      stock: Math.max(0, Number(form.stock) || 0),
+      status: form.status,
+      image: form.image.trim(),
+      images: form.image.trim() ? [form.image.trim()] : [],
+      description: form.description,
+      netQuantities: splitList(form.netQuantitiesText),
+      skinTypes: splitList(form.skinTypesText),
+      promoEnabled: Boolean(form.promoEnabled),
+      promoEndsAt: String(form.promoEndsAt || '').trim(),
+      specs: parseSpecs(form.specsText),
+    };
+
+    setProducts((prev) => {
+      const exists = prev.some((p) => p.id === payload.id);
+      if (exists) return prev.map((p) => (p.id === payload.id ? payload : p));
+      return [payload, ...prev];
+    });
+
+    upsertProduct(payload).catch(() => {
+      // ignore
+    });
+
+    setModalOpen(false);
+  };
+
+  const onPickProductImage = async (e) => {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+    try {
+      setImageBusy(true);
+      const url = await uploadImageToCloudinary(file);
+      setForm((s) => ({ ...s, image: String(url || '').trim() }));
+    } catch {
+      // ignore
+    } finally {
+      setImageBusy(false);
+      if (productFileRef.current) productFileRef.current.value = '';
+    }
+  };
+
+  return (
+    <div className="admin-page-view">
+      <div className="admin-section">
+        <div className="admin-section-header">
+          <div className="admin-section-title">Produits</div>
+          <div className="admin-section-actions">
+            <div className="admin-search">
+              <Search size={16} />
+              <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher…" />
+            </div>
+            <button type="button" className="admin-btn admin-btn-primary" onClick={openCreate}>
+              <Plus size={16} />
+              Nouveau
+            </button>
+          </div>
+        </div>
+
+        {!filtered.length ? <div className="admin-empty">Aucun produit.</div> : null}
+
+        <div className="admin-table-wrap">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paged.map((p) => (
+                <tr key={p.id}>
+                  <td>
+                    <button type="button" className="admin-row-link" onClick={() => openDetail(p.id)}>
+                      <div className="admin-product-cell">
+                        <img className="admin-product-img" src={p.image || p.images?.[0] || '/produits/produit (1).webp'} alt={p.name} />
+                        <div>
+                          <div className="admin-product-name">{p.name}</div>
+                          <div className="admin-product-sku">Réf : {p.sku}</div>
+                        </div>
+                      </div>
+                    </button>
+                  </td>
+                  <td>{p.category}</td>
+                  <td>{formatPriceEUR(p.priceCents)}</td>
+                  <td>{p.stock}</td>
+                  <td>
+                    <StatusBadge value={p.status} />
+                  </td>
+                  <td>
+                    <div className="admin-actions">
+                      <button type="button" className="admin-action-btn" title="Voir" onClick={() => openDetail(p.id)}>
+                        <Eye size={14} />
+                      </button>
+                      <button type="button" className="admin-action-btn" title="Modifier" onClick={() => openEdit(p.id)}>
+                        <Pencil size={14} />
+                      </button>
+                      <button type="button" className="admin-action-btn" title="Supprimer" onClick={() => remove(p.id)}>
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {filtered.length > pageSize ? (
+            <div className="admin-pagination">
+              <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setPage(1)} disabled={safePage === 1}>
+                «
+              </button>
+              <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
+                ‹
+              </button>
+              <div className="admin-page-indicator">
+                Page {safePage} / {totalPages}
+              </div>
+              <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={safePage === totalPages}>
+                ›
+              </button>
+              <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
+                »
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      <Drawer
+        title={editingId ? 'Modifier le produit' : 'Nouveau produit'}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        footer={
+          <>
+            <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setModalOpen(false)}>
+              Annuler
+            </button>
+            <button type="button" className="admin-btn admin-btn-primary" onClick={save}>
+              Enregistrer
+            </button>
+          </>
+        }
+      >
+        <div className="admin-form-grid">
+          <div className="admin-form-group">
+            <label>Marque</label>
+            <input value={form.brand} onChange={(e) => setForm((s) => ({ ...s, brand: e.target.value }))} />
+          </div>
+          <div className="admin-form-group admin-form-full">
+            <label>Nom</label>
+            <input value={form.name} onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))} />
+          </div>
+          <div className="admin-form-group">
+            <label>Référence (SKU)</label>
+            <input value={form.sku} onChange={(e) => setForm((s) => ({ ...s, sku: e.target.value }))} />
+          </div>
+          <div className="admin-form-group">
+            <label>Catégorie</label>
+            <input value={form.category} onChange={(e) => setForm((s) => ({ ...s, category: e.target.value }))} />
+          </div>
+          <div className="admin-form-group">
+            <label>Prix (€)</label>
+            <input
+              type="number"
+              step="0.01"
+              inputMode="decimal"
+              value={form.priceEuros}
+              onChange={(e) => setForm((s) => ({ ...s, priceEuros: e.target.value }))}
+            />
+          </div>
+          <div className="admin-form-group">
+            <label>Stock</label>
+            <input type="number" value={form.stock} onChange={(e) => setForm((s) => ({ ...s, stock: e.target.value }))} />
+          </div>
+          <div className="admin-form-group">
+            <label>Statut</label>
+            <select value={form.status} onChange={(e) => setForm((s) => ({ ...s, status: e.target.value }))}>
+              <option value="active">Actif</option>
+              <option value="draft">Brouillon</option>
+              <option value="archived">Archivé</option>
+            </select>
+          </div>
+          <div className="admin-form-group admin-form-full">
+            <label>Image (URL)</label>
+            <input value={form.image} onChange={(e) => setForm((s) => ({ ...s, image: e.target.value }))} />
+          </div>
+          <div className="admin-form-group admin-form-full">
+            <button
+              type="button"
+              className="admin-btn admin-btn-secondary"
+              onClick={() => (productFileRef.current ? productFileRef.current.click() : null)}
+              disabled={imageBusy}
+            >
+              {imageBusy ? 'Upload…' : '+Image'}
+            </button>
+            <input ref={productFileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickProductImage} />
+          </div>
+          <div className="admin-form-group admin-form-full">
+            <label>Description</label>
+            <textarea value={form.description} onChange={(e) => setForm((s) => ({ ...s, description: e.target.value }))} rows={4} />
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Quantité nette (options, séparées par des virgules)</label>
+            <input
+              value={form.netQuantitiesText}
+              onChange={(e) => setForm((s) => ({ ...s, netQuantitiesText: e.target.value }))}
+              placeholder="ex: 50ml, 100ml, 150ml"
+            />
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Type de peau (options, séparées par des virgules)</label>
+            <input
+              value={form.skinTypesText}
+              onChange={(e) => setForm((s) => ({ ...s, skinTypesText: e.target.value }))}
+              placeholder="ex: Grasse, Sèche, Normale, Tous types"
+            />
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Promo / Offre limitée</label>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <label style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="checkbox"
+                  checked={form.promoEnabled}
+                  onChange={(e) => setForm((s) => ({ ...s, promoEnabled: e.target.checked }))}
+                />
+                Activer le timer
+              </label>
+              <input
+                type="datetime-local"
+                value={form.promoEndsAt}
+                onChange={(e) => setForm((s) => ({ ...s, promoEndsAt: e.target.value }))}
+                style={{ minWidth: 220 }}
+              />
+            </div>
+          </div>
+
+          <div className="admin-form-group admin-form-full">
+            <label>Spécifications (1 par ligne: label: valeur)</label>
+            <textarea
+              value={form.specsText}
+              onChange={(e) => setForm((s) => ({ ...s, specsText: e.target.value }))}
+              rows={5}
+              placeholder={'Marque: Botan\nCatégorie: Autobronzants & solaires'}
+            />
+          </div>
+        </div>
+      </Drawer>
+    </div>
+  );
 }
 
 function AdminOrders({ externalQuery = '' }) {
