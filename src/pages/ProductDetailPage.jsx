@@ -142,7 +142,7 @@ export default function ProductDetailPage() {
     [product]
   );
   const skinTypeOptions = useMemo(
-    () => (Array.isArray(product?.skinTypes) && product.skinTypes.length ? product.skinTypes : ['Oil', 'Dry', 'Normal', 'All']),
+    () => (Array.isArray(product?.skinTypes) && product.skinTypes.length ? product.skinTypes : ['Grasse', 'Sèche', 'Normale', 'Tous types']),
     [product]
   );
 
@@ -232,14 +232,14 @@ export default function ProductDetailPage() {
           {product.promoEnabled ? <DealTimer endsAt={product.promoEndsAt} /> : null}
 
           <OptionGroup
-            label="Net Quantity"
+            label="Quantité nette"
             options={netQtyOptions}
             value={netQty}
             onChange={setNetQty}
           />
 
           <OptionGroup
-            label="Skin Type"
+            label="Type de peau"
             options={skinTypeOptions}
             value={skinType}
             onChange={setSkinType}
@@ -302,16 +302,16 @@ export default function ProductDetailPage() {
                   {product.specs.map((s, idx) => (
                     <li key={`${s?.label || 'spec'}-${idx}`}>{s?.label || '—'} : {s?.value || '—'}</li>
                   ))}
-                  <li>Net Quantity : {netQty}</li>
-                  <li>Skin Type : {skinType}</li>
+                  <li>Quantité nette : {netQty}</li>
+                  <li>Type de peau : {skinType}</li>
                 </ul>
               ) : (
                 <ul>
                   <li>Marque : {product.brand}</li>
                   <li>Catégorie : {product.category}</li>
                   <li>Prix TTC : {formatPriceEUR(product.priceCents)}</li>
-                  <li>Net Quantity : {netQty}</li>
-                  <li>Skin Type : {skinType}</li>
+                  <li>Quantité nette : {netQty}</li>
+                  <li>Type de peau : {skinType}</li>
                 </ul>
               )}
             </AccordionItem>

@@ -497,7 +497,7 @@ function AdminProductDetail({ product, onBack, onEdit }) {
             <img src={product.image || product.images?.[0] || ''} alt={product.name} />
           </div>
           <div className="admin-detail-title">{product.name}</div>
-          <div className="admin-detail-sub">SKU: {product.sku}</div>
+          <div className="admin-detail-sub">Référence : {product.sku}</div>
           <div className="admin-detail-meta">
             <div>
               <div className="admin-detail-label">Catégorie</div>
@@ -605,7 +605,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
     name: '',
     sku: '',
     category: '',
-    priceCents: 0,
+    priceEuros: '',
     stock: 0,
     status: 'active',
     image: '',
@@ -625,7 +625,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
         name: editing.name || '',
         sku: editing.sku || '',
         category: editing.category || '',
-        priceCents: editing.priceCents || 0,
+        priceEuros: ((Number(editing.priceCents) || 0) / 100).toFixed(2),
         stock: editing.stock || 0,
         status: editing.status || 'active',
         image: editing.image || '',
@@ -642,7 +642,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
         name: '',
         sku: '',
         category: '',
-        priceCents: 0,
+        priceEuros: '',
         stock: 0,
         status: 'active',
         image: '',
@@ -698,6 +698,13 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
   };
 
   const save = () => {
+    const parseEurosToCents = (v) => {
+      const raw = String(v ?? '').trim().replace(',', '.');
+      const n = Number(raw);
+      if (!Number.isFinite(n)) return 0;
+      return Math.max(0, Math.round(n * 100));
+    };
+
     const splitList = (s) =>
       String(s || '')
         .split(',')
@@ -727,7 +734,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
       name: form.name.trim() || 'Produit',
       sku: form.sku.trim() || (editingId || uid('SKU')),
       category: form.category.trim() || '—',
-      priceCents: Math.max(0, Number(form.priceCents) || 0),
+      priceCents: parseEurosToCents(form.priceEuros),
       stock: Math.max(0, Number(form.stock) || 0),
       status: form.status,
       image: form.image.trim(),
@@ -799,7 +806,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
                         <img className="admin-product-img" src={p.image || p.images?.[0] || '/produits/produit (1).webp'} alt={p.name} />
                         <div>
                           <div className="admin-product-name">{p.name}</div>
-                          <div className="admin-product-sku">SKU: {p.sku}</div>
+                          <div className="admin-product-sku">Réf : {p.sku}</div>
                         </div>
                       </div>
                     </button>
@@ -879,7 +886,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
             <input value={form.name} onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))} />
           </div>
           <div className="admin-form-group">
-            <label>SKU</label>
+            <label>Référence (SKU)</label>
             <input value={form.sku} onChange={(e) => setForm((s) => ({ ...s, sku: e.target.value }))} />
           </div>
           <div className="admin-form-group">
@@ -887,8 +894,14 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
             <input value={form.category} onChange={(e) => setForm((s) => ({ ...s, category: e.target.value }))} />
           </div>
           <div className="admin-form-group">
-            <label>Prix (centimes)</label>
-            <input type="number" value={form.priceCents} onChange={(e) => setForm((s) => ({ ...s, priceCents: e.target.value }))} />
+            <label>Prix (€)</label>
+            <input
+              type="number"
+              step="0.01"
+              inputMode="decimal"
+              value={form.priceEuros}
+              onChange={(e) => setForm((s) => ({ ...s, priceEuros: e.target.value }))}
+            />
           </div>
           <div className="admin-form-group">
             <label>Stock</label>
@@ -897,9 +910,9 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
           <div className="admin-form-group">
             <label>Status</label>
             <select value={form.status} onChange={(e) => setForm((s) => ({ ...s, status: e.target.value }))}>
-              <option value="active">Active</option>
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
+              <option value="active">Actif</option>
+              <option value="draft">Brouillon</option>
+              <option value="archived">Archivé</option>
             </select>
           </div>
           <div className="admin-form-group admin-form-full">
@@ -942,7 +955,7 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
           </div>
 
           <div className="admin-form-group admin-form-full">
-            <label>Net Quantity (options, séparées par des virgules)</label>
+            <label>Quantité nette (options, séparées par des virgules)</label>
             <input
               value={form.netQuantitiesText}
               onChange={(e) => setForm((s) => ({ ...s, netQuantitiesText: e.target.value }))}
@@ -951,11 +964,11 @@ function AdminProducts({ products, setProducts, onOpenDetail, editIdFromNav, cle
           </div>
 
           <div className="admin-form-group admin-form-full">
-            <label>Skin Type (options, séparées par des virgules)</label>
+            <label>Type de peau (options, séparées par des virgules)</label>
             <input
               value={form.skinTypesText}
               onChange={(e) => setForm((s) => ({ ...s, skinTypesText: e.target.value }))}
-              placeholder="ex: Oil, Dry, Normal, All"
+              placeholder="ex: Grasse, Sèche, Normale, Tous types"
             />
           </div>
 
@@ -1429,6 +1442,7 @@ function AdminPostEditor({ userEmail, posts, setPosts, postId, onBack }) {
                       '</div>'
                     )
                   }
+                  
                 >
                   +2 img
                 </button>
@@ -1594,7 +1608,7 @@ function AdminDashboard({ products, posts, userEmail, onGoProducts, onGoBlog }) 
             href="#admin?view=products"
             style={{
               backgroundImage:
-                "url('beauté regard (3).jpg')",
+                "url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&q=80')",
             }}
           >
             <ShoppingBag size={18} />
