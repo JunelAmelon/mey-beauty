@@ -55,7 +55,7 @@ export default function ContactPage() {
           </div>
 
           <img
-            src="/soin spa (2).jpg"
+            src="/mey-beauty (1).jpeg"
             alt="Espace spa et bien‑être"
             className="spa-photo"
             loading="lazy"
