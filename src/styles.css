@@ -21,7 +21,7 @@
 }
 
 .admin-page {
-  zoom: var(--app-zoom);
+  zoom: 1;
 }
 
 .admin-page .admin-drawer-overlay {

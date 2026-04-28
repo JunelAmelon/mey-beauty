@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
   const [mainImg, setMainImg] = useState(images[0]);
   const [qty, setQty] = useState(1);
   const netQtyOptions = useMemo(
-    () => (Array.isArray(product?.netQuantities) && product.netQuantities.length ? product.netQuantities : ['50g', '100g', '150g', '250g']),
+    () => (Array.isArray(product?.netQuantities) && product.netQuantities.length ? product.netQuantities : ['50ml', '100ml', '150ml', '250ml']),
     [product]
   );
   const skinTypeOptions = useMemo(
@@ -146,8 +146,8 @@ export default function ProductDetailPage() {
     [product]
   );
 
-  const [netQty, setNetQty] = useState(() => '100g');
-  const [skinType, setSkinType] = useState(() => 'Normal');
+  const [netQty, setNetQty] = useState(() => '100ml');
+  const [skinType, setSkinType] = useState(() => 'Normale');
   const [sidebarSearch, setSidebarSearch] = useState('');
 
   useEffect(() => {
@@ -159,8 +159,8 @@ export default function ProductDetailPage() {
   useEffect(() => {
     setMainImg(images[0]);
     setQty(1);
-    setNetQty(netQtyOptions[0] || '100g');
-    setSkinType(skinTypeOptions[0] || 'Normal');
+    setNetQty(netQtyOptions[0] || '100ml');
+    setSkinType(skinTypeOptions[0] || 'Normale');
   }, [productId]);
 
   if (!product) {
