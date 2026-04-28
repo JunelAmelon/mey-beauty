@@ -60,7 +60,7 @@ const SLIDES = [
     subtitle:
       'soin visage : nettoyage, éclat, hydratation — des résultats visibles et durables.',
     leftImage: 'soin visage (2).jpg',
-    rightImage: 'soin visage (1).jpg',
+    rightImage: 'soin visage (1).PNG',
   },
   {
     id: 4,
