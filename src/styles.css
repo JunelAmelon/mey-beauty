@@ -4436,7 +4436,7 @@ a { text-decoration: none; color: inherit; }
   z-index: 2;
   width: 300px;
   height: 200px;
-  background: url('/beauté regard (3).jpg') center/cover;
+  background: url('/beauté%20regard%20(3).PNG') center/cover;
   border-radius: 16px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.30);
   border: 3px solid rgba(255, 255, 255, 0.20);
