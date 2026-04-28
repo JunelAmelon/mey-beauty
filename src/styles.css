@@ -294,14 +294,19 @@ body {
   background: var(--blanc);
   overflow-x: hidden;
   line-height: 1.6;
-  zoom: 1.3;
 }
 
-@supports not (zoom: 1) {
-  body {
-    transform: scale(1.3);
-    transform-origin: top left;
-    width: calc(100% / 1.3);
+.public-root {
+  transform: scale(0.97);
+  transform-origin: top left;
+  width: calc(100% / 0.97);
+}
+
+@supports (zoom: 1) {
+  .public-root {
+    transform: none;
+    width: auto;
+    zoom: 0.97;
   }
 }
 

@@ -248,25 +248,6 @@ export default function ProductDetailPage() {
           <p className="pd-product-desc">{product.description}</p>
 
           <div className="pd-add-row" aria-label="Ajout au panier">
-            <div className="pd-add-actions">
-              <button
-                type="button"
-                className="pd-btn-add-cart"
-                onClick={() => addItem(product, qty)}
-              >
-                Ajouter au panier
-              </button>
-
-              <button
-                type="button"
-                className={`pd-btn-wishlist${isWishlisted(product.id) ? ' active' : ''}`}
-                aria-label={isWishlisted(product.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                onClick={() => toggle(product.id)}
-              >
-                <Heart size={18} fill={isWishlisted(product.id) ? 'currentColor' : 'none'} />
-              </button>
-            </div>
-
             <div className="pd-qty-wrap">
               <button
                 type="button"
@@ -293,6 +274,23 @@ export default function ProductDetailPage() {
                 +
               </button>
             </div>
+
+            <button
+              type="button"
+              className="pd-btn-add-cart"
+              onClick={() => addItem(product, qty)}
+            >
+              Ajouter au panier
+            </button>
+
+            <button
+              type="button"
+              className={`pd-btn-wishlist${isWishlisted(product.id) ? ' active' : ''}`}
+              aria-label={isWishlisted(product.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+              onClick={() => toggle(product.id)}
+            >
+              <Heart size={18} fill={isWishlisted(product.id) ? 'currentColor' : 'none'} />
+            </button>
           </div>
 
           <div className="pd-accordion" aria-label="Informations">
