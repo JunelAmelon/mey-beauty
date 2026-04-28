@@ -1,46 +1,84 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCatalog } from '../context/CatalogContext.jsx';
 
-const POPUP_IMAGE =
-  'https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=200&q=80';
+const PEOPLE = ['Inès', 'Sofia', 'Maya', 'Emma', 'Lina', 'Nora', 'Sarah', 'Aya', 'Clara', 'Yasmine', 'Leïla', 'Mina', 'Jade', 'Camille', 'Aïcha', 'Noémie', 'Mélissa', 'Hana', 'Lola', 'Salomé'];
+const CITIES = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice', 'Toulouse', 'Nantes', 'Montpellier', 'Lille', 'Strasbourg', 'Rennes', 'Grenoble', 'Dijon', 'Reims', 'Rouen', 'Tours', 'Aix-en-Provence', 'Metz', 'Avignon', 'Angers'];
 
-const BUYERS = [
-  { name: 'Inès', product: 'Hydratant Peau Sèche', city: 'Paris', minutesAgo: 13 },
-  { name: 'Sofia', product: 'Sérum Vitamine C', city: 'Lyon', minutesAgo: 4 },
-  { name: 'Maya', product: 'Fond de Teint Couvrance', city: 'Marseille', minutesAgo: 8 },
-  { name: 'Emma', product: 'Fixateur Longue Tenue', city: 'Bordeaux', minutesAgo: 11 },
-  { name: 'Lina', product: 'Lotion Hydratante', city: 'Nice', minutesAgo: 6 },
-  { name: 'Nora', product: 'Sérum Anti-Rides', city: 'Toulouse', minutesAgo: 2 },
-  { name: 'Sarah', product: 'Soin Corps Sans Parfum', city: 'Nantes', minutesAgo: 9 },
-  { name: 'Aya', product: 'Crème Hydratante', city: 'Montpellier', minutesAgo: 7 },
-  { name: 'Clara', product: 'Routine Soins', city: 'Lille', minutesAgo: 5 },
-  { name: 'Yasmine', product: 'Maquillage Premium', city: 'Strasbourg', minutesAgo: 10 },
-  { name: 'Leïla', product: 'Sérum Éclat', city: 'Rennes', minutesAgo: 12 },
-  { name: 'Mina', product: 'Lotion Toute la Journée', city: 'Grenoble', minutesAgo: 3 },
-  { name: 'Jade', product: 'Fond de Teint Sans Huile', city: 'Dijon', minutesAgo: 14 },
-  { name: 'Camille', product: 'Crème Peau Sèche', city: 'Reims', minutesAgo: 1 },
-  { name: 'Aïcha', product: 'Fixateur Maquillage', city: 'Rouen', minutesAgo: 15 },
-  { name: 'Noémie', product: 'Sérum Regard', city: 'Tours', minutesAgo: 6 },
-  { name: 'Mélissa', product: 'Hydratant Ultra', city: 'Aix-en-Provence', minutesAgo: 7 },
-  { name: 'Hana', product: 'Lotion Corps', city: 'Metz', minutesAgo: 9 },
-  { name: 'Lola', product: 'Crème Longue Tenue', city: 'Avignon', minutesAgo: 4 },
-  { name: 'Salomé', product: 'Sérum Cernes', city: 'Angers', minutesAgo: 8 },
+const SERVICES = [
+  { title: 'Soin du visage', image: '/soin visage (1).jpg' },
+  { title: 'Soins minceur et bien‑être', image: '/soin minceur (1).jpg' },
+  { title: 'Soin spa', image: '/soin spa (2).jpg' },
+  { title: 'Massages corps', image: '/massage-corps (2).jpg' },
+  { title: 'Beauté du regard', image: '/beauté regard (2).jpg' },
 ];
 
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomMinutesAgo() {
+  return 1 + Math.floor(Math.random() * 15);
+}
+
+function getProductImage(p) {
+  const img = p?.images?.[0] || p?.image || '';
+  return String(img || '').trim() || '/produits/produit (1).webp';
+}
+
 export default function RecentPurchaseToast() {
+  const { products } = useCatalog();
   const [showPopup, setShowPopup] = useState(true);
-  const [buyerIndex, setBuyerIndex] = useState(0);
+  const [event, setEvent] = useState(null);
   const hideTimeoutRef = useRef(null);
 
+  const productPool = useMemo(() => {
+    const list = Array.isArray(products) ? products : [];
+    return list.filter((p) => p && p.id && (p.images?.[0] || p.image));
+  }, [products]);
+
+  const nextEvent = () => {
+    const who = pick(PEOPLE);
+    const city = pick(CITIES);
+    const minutesAgo = randomMinutesAgo();
+
+    const canUseProducts = productPool.length > 0;
+    const isProduct = canUseProducts ? Math.random() < 0.75 : false;
+
+    if (isProduct) {
+      const p = pick(productPool);
+      setEvent({
+        type: 'product',
+        who,
+        city,
+        minutesAgo,
+        title: p?.name || 'Produit',
+        image: getProductImage(p),
+      });
+      return;
+    }
+
+    const s = pick(SERVICES);
+    setEvent({
+      type: 'service',
+      who,
+      city,
+      minutesAgo,
+      title: s?.title || 'Prestation',
+      image: s?.image || '/mey-beauty (1).jpeg',
+    });
+  };
+
   useEffect(() => {
+    nextEvent();
     const intervalId = setInterval(() => {
-      setBuyerIndex((prev) => (prev + 1) % BUYERS.length);
+      nextEvent();
       setShowPopup(true);
     }, 15000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [productPool.length]);
 
   useEffect(() => {
     if (!showPopup) return;
@@ -53,22 +91,21 @@ export default function RecentPurchaseToast() {
     return () => {
       if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
     };
-  }, [showPopup, buyerIndex]);
-
-  const buyer = BUYERS[buyerIndex];
+  }, [showPopup, event]);
 
   if (!showPopup) return null;
+  if (!event) return null;
 
   return (
     <div className="purchase-popup" aria-live="polite">
       <div className="popup-img">
-        <img src={POPUP_IMAGE} alt="Produit cosmétique" />
+        <img src={event.image} alt={event.title} />
       </div>
       <div className="popup-text">
-        <div className="popup-label">Quelqu'un vient d'acheter</div>
-        <div className="popup-product">{buyer.product}</div>
+        <div className="popup-label">{event.type === 'service' ? "Quelqu'un vient de réserver" : "Quelqu'un vient d'acheter"}</div>
+        <div className="popup-product">{event.title}</div>
         <div className="popup-time">
-          Il y a {buyer.minutesAgo} minutes · {buyer.city}, France
+          Il y a {event.minutesAgo} minutes · {event.city}, France
         </div>
       </div>
       <button className="popup-close" onClick={() => setShowPopup(false)} aria-label="Fermer">
