@@ -297,16 +297,16 @@ body {
 }
 
 .public-root {
-  transform: scale(0.97);
+  transform: scale(0.99);
   transform-origin: top left;
-  width: calc(100% / 0.97);
+  width: calc(100% / 0.99);
 }
 
 @supports (zoom: 1) {
   .public-root {
     transform: none;
     width: auto;
-    zoom: 0.97;
+    zoom: 0.99;
   }
 }
 
