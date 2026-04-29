@@ -129,6 +129,13 @@ export default function Hero() {
       <div className="hero-col hero-center">
 
         <img
+          className="hero-flower-top-left"
+          src="/Amiy-Slider-Flower-Bottom-Left-Img.webp"
+          alt=""
+          aria-hidden="true"
+        />
+
+        <img
           className="hero-flower-top"
           src="/Amiy-Slider-Flower-Top-Img.webp"
           alt=""

@@ -163,7 +163,7 @@ export default function BlogDetailPage() {
           <div>
             <div className="sidebar-gallery" aria-label="Galerie">
               <img src="/soin%20visage%20(2).PNG" alt="Soin visage" className="gallery-img" loading="lazy" />
-              <img src="/soin%20spa%20(2).jpg" alt="Spa" className="gallery-img" loading="lazy" />
+              <img src="/soin%20visage%20(2).PNG" alt="Spa" className="gallery-img" loading="lazy" />
               <img src="/massage-corps%20(2).jpg" alt="Massage" className="gallery-img" loading="lazy" />
               <img src="/soin%20minceur%20(2).jpg" alt="Minceur" className="gallery-img" loading="lazy" />
               <img src="/beauté%20regard%20(3).PNG" alt="Regard" className="gallery-img" loading="lazy" />

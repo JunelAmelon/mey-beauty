@@ -7,7 +7,7 @@ const CITIES = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice', 'Toulouse', 'N
 const SERVICES = [
   { title: 'Soin du visage', image: '/soin%20visage%20(1).PNG' },
   { title: 'Soins minceur et bien‑être', image: '/soin minceur (1).jpg' },
-  { title: 'Soin spa', image: '/soin spa (2).jpg' },
+  { title: 'Soin spa', image: '/soin%20visage%20(2).PNG' },
   { title: 'Massages corps', image: '/massage-corps (2).jpg' },
   { title: 'Beauté du regard', image: '/beauté regard (2).jpg' },
 ];

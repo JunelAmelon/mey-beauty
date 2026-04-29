@@ -87,7 +87,7 @@ function seedAdminPosts() {
       date: '2024-10-27',
       excerpt:
         'Les gestes simples qui changent tout : vapeur, massage, hydratation, et une routine spa à reproduire à la maison pour une peau lumineuse.',
-      image: img('/soin spa (2).jpg'),
+      image: img('/soin visage (2).PNG'),
       contentHtml: `
         <p class="blog-article-p">Entre le rythme du quotidien et le stress, notre peau et notre esprit ont besoin de pauses. Le spa, ce n’est pas seulement une “parenthèse plaisir” : c’est un vrai rituel d’équilibre. Bonne nouvelle : tu peux recréer une expérience proche du spa à la maison, avec les bons gestes.</p>
 
@@ -219,7 +219,7 @@ function seedAdminPosts() {
 
         <div class="blog-article-img-row">
           <img src="${img('/massage-corps (1).jpg')}" alt="Massage relaxant" />
-          <img src="${img('/soin spa (2).jpg')}" alt="Ambiance spa" />
+          <img src="${img('/soin visage (2).PNG')}" alt="Ambiance spa" />
         </div>
 
         <div class="blog-article-quote">
